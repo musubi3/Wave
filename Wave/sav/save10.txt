@@ -1,0 +1,17 @@
+Default
+Sketchers
+Act My Age
+Normal
+Hard
+0
+true
+true
+true
+0
+3
+0
+0
+0
+false
+false
+false
