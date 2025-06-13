@@ -39,7 +39,7 @@ public class KeyInput extends KeyAdapter {
 		else if (Game.gameState == STATE.Game) {
 			if (key == KeyEvent.VK_P) {
 				if (Game.paused) Game.paused = false;
-				else {audio.playMenuSound("res/button4.wav", 0.27); Game.paused = true;}
+				else {audio.playMenuSound("app/res/button4.wav", 0.27); Game.paused = true;}
 			}
 		}
 		if (Game.paused) {

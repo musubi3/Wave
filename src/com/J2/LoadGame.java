@@ -46,28 +46,28 @@ public class LoadGame extends MouseAdapter {
 		this.handler = handler;
 		this.hud = hud;
 		for (int i = 0; i < 16; i++) saves.add(""); 
-		saveFiles.add("sav/base.txt");
-		saveFiles.add("sav/save1.txt");
-		saveFiles.add("sav/save2.txt");
-		saveFiles.add("sav/save3.txt");
-		saveFiles.add("sav/save4.txt");
-		saveFiles.add("sav/save5.txt");
-		saveFiles.add("sav/save6.txt");
-		saveFiles.add("sav/save7.txt");
-		saveFiles.add("sav/save8.txt");
-		saveFiles.add("sav/save9.txt");
-		saveFiles.add("sav/save10.txt");
-		saveFiles.add("sav/save11.txt");
-		saveFiles.add("sav/save12.txt");
-		saveFiles.add("sav/save13.txt");
-		saveFiles.add("sav/save14.txt");
-		saveFiles.add("sav/save15.txt");
-		saveFiles.add("sav/save16.txt");
+		saveFiles.add("app/saves/base.txt");
+		saveFiles.add("app/saves/save1.txt");
+		saveFiles.add("app/saves/save2.txt");
+		saveFiles.add("app/saves/save3.txt");
+		saveFiles.add("app/saves/save4.txt");
+		saveFiles.add("app/saves/save5.txt");
+		saveFiles.add("app/saves/save6.txt");
+		saveFiles.add("app/saves/save7.txt");
+		saveFiles.add("app/saves/save8.txt");
+		saveFiles.add("app/saves/save9.txt");
+		saveFiles.add("app/saves/save10.txt");
+		saveFiles.add("app/saves/save11.txt");
+		saveFiles.add("app/saves/save12.txt");
+		saveFiles.add("app/saves/save13.txt");
+		saveFiles.add("app/saves/save14.txt");
+		saveFiles.add("app/saves/save15.txt");
+		saveFiles.add("app/saves/save16.txt");
 	}
 
 	public void saveUser() {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("sav/userNum.txt"));
+			BufferedWriter bw = new BufferedWriter(new FileWriter("app/saves/userNum.txt"));
 			bw.write(""+user); bw.newLine();
 			bw.write(""+numUsers); bw.newLine();
 			bw.write(""+bounds); bw.newLine();
@@ -76,14 +76,15 @@ public class LoadGame extends MouseAdapter {
 			bw.close();
 		} catch (IOException e) {e.printStackTrace();}
 	}
+
 	public void loadUser() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("sav/userNum.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("app/saves/userNum.txt"));
 			user = Integer.parseInt(br.readLine());
 			numUsers = Integer.parseInt(br.readLine());
 			bounds = Integer.parseInt(br.readLine());
-			for (int i = 0; i < saveFiles.size(); i++) saveFiles.set(i,br.readLine());
-			for (int i = 0; i < numUsers; i++) saves.set(i,br.readLine());
+			for (int i = 0; i < saveFiles.size(); i++) saveFiles.set(i, br.readLine());
+			for (int i = 0; i < numUsers; i++) saves.set(i, br.readLine());
 			br.close();
 		} catch (NumberFormatException e) {e.printStackTrace();} 
 		catch (IOException e) {e.printStackTrace();}
@@ -155,9 +156,9 @@ public class LoadGame extends MouseAdapter {
 		}
 		audio.stopMusic();
 		if (Settings.music) {
-			if (Settings.songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-			else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-			else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+			if (Settings.songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+			else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+			else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 		}
 	}
 
@@ -219,7 +220,7 @@ public class LoadGame extends MouseAdapter {
 					saves.remove(15);
 					saves.add(0,"Enter Name");
 					if (numUsers >= 15) full = true;
-					audio.playMenuSound("res/button4.wav", 0.27);
+					audio.playMenuSound("app/res/button4.wav", 0.27);
 				}
 				int down = 190;
 				for (int i = 0; i < saves.size(); i++) {
@@ -229,9 +230,9 @@ public class LoadGame extends MouseAdapter {
 						bounds = getBounds(saves.get(numUsers-user));
 						saveUser();
 						audio.stopMusic();
-						if (Settings.songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-						else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-						else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+						if (Settings.songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+						else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+						else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 						Game.gameState = STATE.Menu;
 					}
 					if (mouseOver(mx, my, 287, down, 250, 20) && numUsers>i && mouse == MouseEvent.BUTTON3) {
@@ -249,11 +250,11 @@ public class LoadGame extends MouseAdapter {
 				if (numUsers < 15) saves.set(14, "");
 				if (numUsers < 16) full = false;
 				Game.gameState = STATE.Menu;
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			if (!mouseOver(mx, my, 287, 160, 250, 350) && timer <= 0 && !newUser && !newName && !rightClick && mouse == MouseEvent.BUTTON1) {
 				Game.gameState = STATE.Menu;
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			if (rightClick) {
 				if (mouseOver(mx, my, 362, 287, 94, 18) && !confirmation && mouse == MouseEvent.BUTTON1) {
@@ -262,21 +263,21 @@ public class LoadGame extends MouseAdapter {
 					prevName = saves.get(player);
 					saves.set(player, "Enter New Name");
 					if (user == numUsers-player)bounds = getBounds(saves.get(player));
-					if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+					if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 				}
 				if (mouseOver(mx, my, 362, 317, 94, 18) && !confirmation && mouse == MouseEvent.BUTTON1) {
 					confirmation = true;
 					timer2 = 25;
-					if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+					if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 				}
 				if (!mouseOver(mx, my, 335, 270, 150, 75) && !confirmation && mouse == MouseEvent.BUTTON1) {
 					rightClick = false;
-					if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+					if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 				}
 				if (confirmation) {
 					if (mouseOver(mx, my, 362, 317, 94, 18) && timer2 <= 0 && mouse == MouseEvent.BUTTON1) {
 						confirmation = false;
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
 					if (mouseOver(mx, my, 362, 292, 94, 18) && mouse == MouseEvent.BUTTON1) {
 						rightClick = false;
@@ -288,7 +289,7 @@ public class LoadGame extends MouseAdapter {
 						if (numUsers < 15) saves.set(14, "");
 						delete();
 						saveUser();
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
 				}
 			}
@@ -386,7 +387,7 @@ public class LoadGame extends MouseAdapter {
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			if (Settings.darkMode) g.setColor(Color.darkGray);
 			else g.setColor(new Color(235,235,235));
@@ -499,9 +500,9 @@ public class LoadGame extends MouseAdapter {
 				save(saveFiles.get(user));
 				saveUser();
 				audio.stopMusic();
-				if (Settings.songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-				else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-				else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+				if (Settings.songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+				else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+				else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 				Game.gameState = STATE.Menu;
 				confirmed = false;
 			}

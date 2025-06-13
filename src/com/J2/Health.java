@@ -39,14 +39,14 @@ public class Health extends GameObject {
 					if (getBounds().intersects(tempObject.getBounds())) {
 						handler.removeObject(this);
 						HUD.HEALTH += 10;
-						audio.playMenuSound("res/healthSFX.wav", 1.5);
+						audio.playMenuSound("app/res/healthSFX.wav", 1.5);
 					}
 				}
 				else if(tempObject.getID() == ID.Player2) {
 					if (getBounds().intersects(tempObject.getBounds())) {
 						handler.removeObject(this);
 						HUD.HEALTH2 += 10;
-						audio.playMenuSound("res/healthSFX.wav", 1.5);
+						audio.playMenuSound("app/res/healthSFX.wav", 1.5);
 					}
 				}
 			}

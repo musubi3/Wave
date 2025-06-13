@@ -51,7 +51,7 @@ public class EndScreen extends MouseAdapter {
 				if (Settings.darkMode) endColor = Color.black;
 				else endColor = Color.darkGray;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			//Main Menu
 			if (mouseOver(mx, my, 170, 350, 200, 80)) {
@@ -71,7 +71,7 @@ public class EndScreen extends MouseAdapter {
 				}
 				if (Settings.darkMode) endColor2 = Color.black;
 				else endColor2 = Color.darkGray;
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		else if (Game.gameState == STATE.End2) {
@@ -93,7 +93,7 @@ public class EndScreen extends MouseAdapter {
 				if (Settings.darkMode) endColor = Color.black;
 				else endColor = Color.darkGray;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (Settings.sound) audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			//Main Menu
 			else if (mouseOver(mx, my, 170, 350, 200, 80)) {
@@ -115,7 +115,7 @@ public class EndScreen extends MouseAdapter {
 				}
 				if (Settings.darkMode) endColor2 = Color.black;
 				else endColor2 = Color.darkGray;
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 	}

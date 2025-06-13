@@ -36,7 +36,7 @@ public class Paused extends MouseAdapter{
 		if (Game.paused) {
 			if (!mouseOver(mx, my, 100, 50, 600, 450)) {
 				Game.paused = false;
-				if (Settings.sound) audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 		}
 		//Play Again
@@ -57,7 +57,7 @@ public class Paused extends MouseAdapter{
 				handler.clearEnemys();
 				for (int i = 0; i < 1; i++)
 					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-				if (Settings.sound) audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			//Main Menu
 			else if (mouseOver(mx, my, 170, 350, 133, 80)) {
@@ -76,7 +76,7 @@ public class Paused extends MouseAdapter{
 					handler.addObject(new MenuParticle(r.nextInt(Game.WIDTH)-40, r.nextInt(Game.HEIGHT)-70, ID.MenuParticle, handler));
 				}
 				if (load.user > 0) handler.addObject(new MenuPlayer(640,355,ID.MenuPlayer,handler));
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Resume
 			else if (mouseOver(mx, my, 334, 350, 133, 80)) {
@@ -84,7 +84,7 @@ public class Paused extends MouseAdapter{
 				else pauseColor3 = Color.darkGray;
 				pauseColor6 = Color.darkGray;
 				Game.paused = false; 
-				if (Settings.sound) audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 		}
 		else if (Game.paused && Game.multiplayer) {
@@ -109,7 +109,7 @@ public class Paused extends MouseAdapter{
 				handler.clearEnemys();
 				for (int i = 0; i < 2; i++)
 					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-30), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-				if (Settings.sound) audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			//Main Menu
 			else if (mouseOver(mx, my, 170, 350, 133, 80)) {
@@ -132,7 +132,7 @@ public class Paused extends MouseAdapter{
 					handler.addObject(new MenuParticle(r.nextInt(Game.WIDTH)-40, r.nextInt(Game.HEIGHT)-70, ID.MenuParticle, handler));
 				}
 				if (load.user > 0) handler.addObject(new MenuPlayer(640,355,ID.MenuPlayer,handler));
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Resume
 			else if (mouseOver(mx, my, 334, 350, 133, 80)) {
@@ -140,7 +140,7 @@ public class Paused extends MouseAdapter{
 				else pauseColor3 = Color.darkGray;
 				pauseColor6 = Color.darkGray;
 				Game.paused = false;
-				if (Settings.sound) audio.playMenuSound("res/button.wav", 0.84);
+				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 		}
 	}

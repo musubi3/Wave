@@ -13,7 +13,7 @@ public class Window extends Canvas {
 	public Window(int width, int height, String title, Game game) {
 		JFrame frame = new JFrame(title);
 		
-		ImageIcon icon = new ImageIcon("res/logo.png");
+		ImageIcon icon = new ImageIcon("app/res/logo.png");
 		frame.setIconImage(icon.getImage());
 		
 		frame.setPreferredSize(new Dimension(width, height));

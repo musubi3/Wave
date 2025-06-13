@@ -58,14 +58,14 @@ public class Settings extends MouseAdapter{
 				open = false;
 				open2 = false;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			if (!mouseOver(mx, my,65, 50, 700, 450)) {
 				Game.gameState = STATE.Menu;
 				open = false;
 				open2 = false;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		//Appearance
@@ -74,7 +74,7 @@ public class Settings extends MouseAdapter{
 				Game.gameState = STATE.ApperanceSettings;
 				open = false;
 				open2 = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		//Audio
@@ -83,7 +83,7 @@ public class Settings extends MouseAdapter{
 				Game.gameState = STATE.AudioSettings;
 				open = false;
 				open2 = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		//Settings
@@ -92,7 +92,7 @@ public class Settings extends MouseAdapter{
 				Game.gameState = STATE.Settings;
 				open = false;
 				open2 = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		//Difficulty
@@ -100,7 +100,7 @@ public class Settings extends MouseAdapter{
 			if (mouseOver(mx, my, 80, 350, 269, 70)) {
 				Game.gameState = STATE.Difficulty;
 				open = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		if (Game.gameState == STATE.AudioSettings) {
@@ -112,34 +112,34 @@ public class Settings extends MouseAdapter{
 				}
 				else {
 					music = true;
-					if (songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-					else if (songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-					else if (songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+					if (songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+					else if (songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+					else if (songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 				}
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Sfx on/off
 			else if (mouseOver(mx, my, 655, 162, 75, 25)) {
 				if (sound) sound = false;
 				else sound = true;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Expand songs
 			else if (mouseOver(mx, my, 695, 207, 35, 25) && !open) {
 				open = true;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Collapse songs
 			else if (mouseOver(mx, my, 695, 207, 35, 25) && open) {
 				open = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Collapse songs
 			else if (!mouseOver(mx, my, 495, 232, 200, 50) && open) {
 				open = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//New Song
 			else if (mouseOver(mx, my, 495, 232, 200, 25) && open) {
@@ -149,11 +149,11 @@ public class Settings extends MouseAdapter{
 				songs[1] = temp;
 				open = false;
 				audio.stopMusic();
-				if (songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-				else if (songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-				else if (songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+				if (songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+				else if (songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+				else if (songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//New Song 2
 			else if (mouseOver(mx, my, 495, 257, 200, 25) && open) {
@@ -163,11 +163,11 @@ public class Settings extends MouseAdapter{
 				songs[2] = temp;
 				open = false;
 				audio.stopMusic();
-				if (songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-				else if (songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-				else if (songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+				if (songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+				else if (songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+				else if (songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 		else if (Game.gameState == STATE.ApperanceSettings) {
@@ -176,7 +176,7 @@ public class Settings extends MouseAdapter{
 				if (darkMode) darkMode = false;
 				else darkMode = true;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 				Menu.menuColor = Color.lightGray;
 				Menu.menuColor2 = Color.lightGray;
 				Menu.menuColor3 = Color.lightGray;
@@ -190,7 +190,7 @@ public class Settings extends MouseAdapter{
 				if (darkMode) darkMode = false;
 				else darkMode = true;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 				Menu.menuColor = Color.darkGray;
 				Menu.menuColor2 = Color.darkGray;
 				Menu.menuColor3 = Color.darkGray;
@@ -204,17 +204,17 @@ public class Settings extends MouseAdapter{
 			//Expand menu
 			if (mouseOver(mx, my, 695, 117, 35, 25) && !open2) {
 				open2 = true;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Collapse
 			else if (mouseOver(mx, my, 695, 117, 35, 25) && open2) {
 				open2 = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Collapse
 			else if (!mouseOver(mx, my, 495, 132, 200, 25) && open2) {
 				open2 = false;
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Change Diff
 			else if (mouseOver(mx, my, 495, 142, 200, 25) && open2) {
@@ -226,7 +226,7 @@ public class Settings extends MouseAdapter{
 				if (diff[0].equals("Normal")) Game.difficulty = 0;
 				else if (diff[0].equals("Hard")) Game.difficulty = 1;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 		}
 	}
@@ -392,7 +392,7 @@ public class Settings extends MouseAdapter{
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			//Window left
 			if (darkMode) g.setColor(Color.darkGray);
@@ -503,7 +503,7 @@ public class Settings extends MouseAdapter{
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			//Window left
 			if (darkMode) g.setColor(Color.darkGray);
@@ -658,7 +658,7 @@ public class Settings extends MouseAdapter{
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			//Window left
 			if (darkMode) g.setColor(Color.darkGray);
@@ -765,7 +765,7 @@ public class Settings extends MouseAdapter{
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			//Window left
 			if (darkMode) g.setColor(Color.darkGray);

@@ -33,16 +33,16 @@ public class About extends MouseAdapter{
 			if (mouseOver(mx, my, 176, 66, 58, 18)) {
 				Game.gameState = STATE.Menu;
 				colors[0] = Color.darkGray;
-				audio.playMenuSound("res/button4.wav", 0.27);
+				audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			
 			if (!mouseOver(mx, my, 165, 60, 500, 450) && timer <= 0) {
 				Game.gameState = STATE.Menu;
-				audio.playMenuSound("res/button4.wav", 0.27);
+				audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			
 			if (mouseOver(mx, my, 452, 212, 184, 21)) {
-				audio.playMenuSound("res/button4.wav", 0.27);
+				audio.playMenuSound("app/res/button4.wav", 0.27);
 				try {d.browse(new URI("mailto:ju3tinlee@gmail.com"));} 
 				catch (IOException e1) {e1.printStackTrace();} 
 				catch (URISyntaxException e1) {e1.printStackTrace();}
@@ -51,8 +51,8 @@ public class About extends MouseAdapter{
 			}
 
 			if (mouseOver(mx, my, 537, 237, 99, 21)) {
-				audio.playMenuSound("res/button4.wav", 0.27);
-				try {d.browse(new URI("https://instagram.com/ju3tin.lee/"));} 
+				audio.playMenuSound("app/res/button4.wav", 0.27);
+				try {d.browse(new URI("https://github.com/musubi3"));} 
 				catch (IOException e1) {e1.printStackTrace();} 
 				catch (URISyntaxException e1) {e1.printStackTrace();}
 				if (Settings.darkMode) colors[2] = new Color(170,170,170);
@@ -107,7 +107,7 @@ public class About extends MouseAdapter{
 		else g.setColor(Color.darkGray);
 		g.drawString("v1.0.0", 765, 583);
 		g.setColor(Color.lightGray);
-		g.drawString("JL33", 12, 583);
+		g.drawString("MUSUBI", 12, 583);
 
 		//Window
 		if (Settings.darkMode) g.setColor(Color.darkGray);
@@ -146,8 +146,8 @@ public class About extends MouseAdapter{
 		g.drawString("ju3tinlee@gmail.com", 453, 230);
 		if (Settings.darkMode)g.setColor(new Color(170,170,170));
 		else g.setColor(new Color(95,95,95));
-		g.drawString("Instagram", 182, 255);
+		g.drawString("GitHub", 182, 255);
 		g.setColor(colors[2]);
-		g.drawString("@ju3tin.lee", 538, 255);
+		g.drawString("musubi3", 538, 255);
 	}
 }

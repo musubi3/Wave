@@ -34,7 +34,7 @@ public class Coin extends GameObject {
 					if (getBounds().intersects(tempObject.getBounds())) {
 						Shop.coins += 100;
 						EndScreen.newCoins += 100;
-						audio.playMenuSound("res/coinSFX.wav", 0.8);
+						audio.playMenuSound("app/res/coinSFX.wav", 0.8);
 						handler.removeObject(this);
 					}
 				}

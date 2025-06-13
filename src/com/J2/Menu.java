@@ -52,7 +52,7 @@ public class Menu extends MouseAdapter {
 					if (Game.difficulty == 0) handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
 					else handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-35), r.nextInt(Game.HEIGHT-55), ID.HardEnemy, handler, hud));
 				for (int i = 0; i < button.length; i++) button[i] = 0;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 
 			//Multiplayer
@@ -68,7 +68,7 @@ public class Menu extends MouseAdapter {
 					if (Game.difficulty == 0) handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
 					else handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-35), r.nextInt(Game.HEIGHT-55), ID.HardEnemy, handler, hud));
 				for (int i = 0; i < button.length; i++) button[i] = 0;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 
 			//Settings
@@ -78,7 +78,7 @@ public class Menu extends MouseAdapter {
 				if (Settings.darkMode) menuColor3 = Color.lightGray;
 				else menuColor3 = Color.darkGray;
 				for (int i = 0; i < button.length; i++) button[i] = 0;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 
 			//Quit
@@ -94,7 +94,7 @@ public class Menu extends MouseAdapter {
 				if (Settings.darkMode) menuColor5 = Color.lightGray;
 				else menuColor5 = Color.darkGray;
 				for (int i = 0; i < button.length; i++) button[i] = 0;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			
 			//Shop
@@ -104,7 +104,7 @@ public class Menu extends MouseAdapter {
 				if (Settings.darkMode) menuColor6 = Color.lightGray;
 				else menuColor6 = Color.darkGray;
 				for (int i = 0; i < button.length; i++) button[i] = 0;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			
 			//About
@@ -113,7 +113,7 @@ public class Menu extends MouseAdapter {
 				Game.gameState = STATE.About;
 				if (Settings.darkMode) about = Color.lightGray;
 				else about = Color.darkGray;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 			
 			//???
@@ -125,7 +125,7 @@ public class Menu extends MouseAdapter {
 				Game.gameState = STATE.Egg;
 				if (Settings.darkMode) about = Color.lightGray;
 				else about = Color.darkGray;
-				audio.playMenuSound("res/button.wav", 0.84);
+				audio.playMenuSound("app/res/button.wav", 0.84);
 			}
 		}
 	}
@@ -242,7 +242,7 @@ public class Menu extends MouseAdapter {
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
 			g.setColor(about);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 			
 			if (Settings.darkMode) g.setColor(Color.darkGray);
 			else g.setColor(new Color(235,235,235));

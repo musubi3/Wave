@@ -30,7 +30,7 @@ public class Easter extends KeyAdapter{
 		this.audio = audio;
 		this.handler = handler;
 		ImageLoader loader = new ImageLoader();
-		sparkles = loader.loadImage("res/sparkles.png");
+		sparkles = loader.loadImage("app/res/sparkles.png");
 		
 	}
 	
@@ -39,9 +39,9 @@ public class Easter extends KeyAdapter{
 		if (key == KeyEvent.VK_ESCAPE && timer == -1) {
 			audio.stopMusic();
 			Game.gameState = STATE.Menu;
-			if (Settings.songs[0].equals("Default")) audio.playGameSound("res/music.wav", 1.122);
-			else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("res/sketchers.wav", 1.122);
-			else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("res/1D.wav", 1.122);
+			if (Settings.songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
+			else if (Settings.songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
+			else if (Settings.songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
 			timer = 670;
 			if (Settings.darkMode) {col = 0; esc = 0;}
 			else {col = 247; esc = 247;}
@@ -55,7 +55,7 @@ public class Easter extends KeyAdapter{
 	
 	private void song() {
 		if (song) {
-			audio.playGameSound("res/replay.wav", 1.0);
+			audio.playGameSound("app/res/replay.wav", 1.0);
 			song = false;
 		}
 	}

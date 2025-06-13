@@ -99,25 +99,25 @@ public class Game extends Canvas implements Runnable{
 		this.addMouseMotionListener(about);
 		
 		try {
-			titleFont = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/title.ttf")).deriveFont(70f);
+			titleFont = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")).deriveFont(70f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/title.ttf")));
-			titleFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/title.ttf")).deriveFont(20f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/title.ttf")));
-			titleFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/title.ttf")).deriveFont(15f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/title.ttf")));
-			menuFont = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")).deriveFont(20f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")));
-			menuFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")).deriveFont(13f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")));
-			menuFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")).deriveFont(10f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")));
-			menuFont4 = Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")).deriveFont(12.5f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fnt/menu.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")));
+			titleFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")).deriveFont(20f);
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")));
+			titleFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")).deriveFont(15f);
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")));
+			menuFont = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(20f);
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
+			menuFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(13f);
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
+			menuFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(10f);
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
+			menuFont4 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(12.5f);
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
 		}catch (FontFormatException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
 		
 		
-		if (Settings.music) audio.playGameSound("res/music.wav", 1.122);
+		if (Settings.music) audio.playGameSound("app/res/music.wav", 1.122);
 		load.loadUser();
 		load.load(load.saveFiles.get(load.user));
 
@@ -126,14 +126,14 @@ public class Game extends Canvas implements Runnable{
 		new Window(WIDTH, HEIGHT, "WAVE", this);
 		
 		ImageLoader imgLoad = new ImageLoader();
-		for (int i = 0; i < 6; i++) {int file = i+1; coin[i] = imgLoad.loadImage("res/Coin/coin"+file+".png");}
-		coin[6] = imgLoad.loadImage("res/Coin/coin.png");
-		healthPack = imgLoad.loadImage("res/health.png");
-		skins[0] = imgLoad.loadImage("res/energyBall.png");
-		skins[1] = imgLoad.loadImage("res/rasengan.png");
-		skins[2] = imgLoad.loadImage("res/energy2.png");
-		for (int i = 0; i < 13; i++) {int file = i+1; pyroBall[i] = imgLoad.loadImage("res/pyroBall/pyroBall"+file+".png");}
-		for (int i = 0; i < 13; i++) {int file = i+1; greenBall[i] = imgLoad.loadImage("res/energyBall/e"+file+".png");}
+		for (int i = 0; i < 6; i++) {int file = i+1; coin[i] = imgLoad.loadImage("app/res/Coin/coin"+file+".png");}
+		coin[6] = imgLoad.loadImage("app/res/Coin/coin.png");
+		healthPack = imgLoad.loadImage("app/res/health.png");
+		skins[0] = imgLoad.loadImage("app/res/energyBall.png");
+		skins[1] = imgLoad.loadImage("app/res/rasengan.png");
+		skins[2] = imgLoad.loadImage("app/res/energy2.png");
+		for (int i = 0; i < 13; i++) {int file = i+1; pyroBall[i] = imgLoad.loadImage("app/res/pyroBall/pyroBall"+file+".png");}
+		for (int i = 0; i < 13; i++) {int file = i+1; greenBall[i] = imgLoad.loadImage("app/res/energyBall/e"+file+".png");}
 		
 			
 		for (int i = 0; i < 20; i++) {
@@ -197,7 +197,7 @@ public class Game extends Canvas implements Runnable{
 					hud.isHighScore(hud.getScore());
 					if (hud.highScore == hud.getScore()) end.newHighScore = true;
 					gameState = STATE.End;
-					audio.playMenuSound("res/gameOver.wav", 1.5);
+					audio.playMenuSound("app/res/gameOver.wav", 1.5);
 					HUD.HEALTH = 100;
 					Player.dead = false;
 				} else if (multiplayer && Player.dead && Player.dead2) {
@@ -205,7 +205,7 @@ public class Game extends Canvas implements Runnable{
 					hud.isHighScore(hud.getScore2());
 					if (hud.highScore == hud.getScore() || hud.highScore == hud.getScore2()) end.newHighScore = true;
 					gameState = STATE.End2;
-					audio.playMenuSound("res/gameOver.wav", 1.5);
+					audio.playMenuSound("app/res/gameOver.wav", 1.5);
 					HUD.HEALTH = 100;
 					HUD.HEALTH2 = 100;
 					Player.dead = false;

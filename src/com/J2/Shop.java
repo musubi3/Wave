@@ -42,35 +42,35 @@ public class Shop extends MouseAdapter{
 				colors[0] = Color.darkGray;
 				upgrades = true;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			if (!mouseOver(mx, my, 65, 50, 700, 450) && timer <= 0) {
 				Game.gameState = STATE.Menu;
 				upgrades = true;
 				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Colors
 			if (mouseOver(mx, my, 80, 180, 269, 70)) {
 				upgrades = false;
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			//Upgrades
 			if (mouseOver(mx, my, 80, 95, 269, 70)) {
 				upgrades = true;
-				if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 			}
 			if (upgrades) {
 				if (mouseOver(mx, my, 400, 120, 150, 100)) {
-					if (coins >= 2000) audio.playMenuSound("res/button4.wav", 0.27);
-					else if (coins < 2000) audio.playMenuSound("res/stop.wav", 1.0);
+					if (coins >= 2000) audio.playMenuSound("app/res/button4.wav", 0.27);
+					else if (coins < 2000) audio.playMenuSound("app/res/stop.wav", 1.0);
 					if (healthLevel <= 5 && coins >= 2000) {healthLevel++; coins-=2000;}
 					if (healthLevel == 5) {maxHealth = true; colors[1] = Color.red;}
 					if (load.user > 0) load.save(load.saveFiles.get(load.user));
 				}
 				if (mouseOver(mx, my, 580, 120, 150, 100)) {
-					if (coins >= 2000) audio.playMenuSound("res/button4.wav", 0.27);
-					else if (coins < 2000) audio.playMenuSound("res/stop.wav", 1.0);
+					if (coins >= 2000) audio.playMenuSound("app/res/button4.wav", 0.27);
+					else if (coins < 2000) audio.playMenuSound("app/res/stop.wav", 1.0);
 					if (Player.speed <= 8 && coins >= 2000) {Player.speed++; coins-=2000;}
 					if (Player.speed == 8) {maxSpeed = true; colors[2] = Color.red;}
 					if (load.user > 0) load.save(load.saveFiles.get(load.user));
@@ -80,11 +80,11 @@ public class Shop extends MouseAdapter{
 				if (mouseOver(mx, my, 400, 120, 150, 100)) {
 					skin = 0;
 					if (load.user > 0) load.save(load.saveFiles.get(load.user));
-					if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+					if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 				}
 				if (mouseOver(mx, my, 580, 120, 150, 100)) {
 					if (!unlocked[0] && coins >= 5000) {
-						audio.playMenuSound("res/button4.wav", 0.27);
+						audio.playMenuSound("app/res/button4.wav", 0.27);
 						skin = 1;
 						unlocked[0] = true;
 						coins -= 5000;
@@ -93,9 +93,9 @@ public class Shop extends MouseAdapter{
 					else if (unlocked[0]) {
 						skin = 1;
 						if (load.user > 0) load.save(load.saveFiles.get(load.user));
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
-				} if (mouseOver(mx, my, 580, 120, 150, 100) && !unlocked[0] && coins < 5000) audio.playMenuSound("res/stop.wav", 0.8);
+				} if (mouseOver(mx, my, 580, 120, 150, 100) && !unlocked[0] && coins < 5000) audio.playMenuSound("app/res/stop.wav", 0.8);
 				
 				if (mouseOver(mx, my, 400, 280, 150, 100)) {
 					if (!unlocked[1] && coins >= 7500) {
@@ -103,14 +103,14 @@ public class Shop extends MouseAdapter{
 						unlocked[1] = true;
 						coins -= 7500;
 						if (load.user > 0) load.save(load.saveFiles.get(load.user));
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
 					else if (unlocked[1]) {
 						skin = 2;
 						if (load.user > 0) load.save(load.saveFiles.get(load.user));
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
-				} if (mouseOver(mx, my, 400, 280, 150, 100) && !unlocked[0] && coins < 5000) audio.playMenuSound("res/stop.wav", 0.8);
+				} if (mouseOver(mx, my, 400, 280, 150, 100) && !unlocked[0] && coins < 5000) audio.playMenuSound("app/res/stop.wav", 0.8);
 				
 				if (mouseOver(mx, my, 580, 280, 150, 100)) {
 					if (!unlocked[2] && coins >= 10000) {
@@ -118,14 +118,14 @@ public class Shop extends MouseAdapter{
 						unlocked[2] = true;
 						coins -= 10000;
 						if (load.user > 0) load.save(load.saveFiles.get(load.user));
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
 					else if (unlocked[2]) {
 						skin = 3;
 						if (load.user > 0) load.save(load.saveFiles.get(load.user));
-						if (Settings.sound) audio.playMenuSound("res/button4.wav", 0.27);
+						if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
 					}
-				} if (mouseOver(mx, my, 580, 280, 150, 100) && !unlocked[0] && coins < 5000) audio.playMenuSound("res/stop.wav", 0.8);
+				} if (mouseOver(mx, my, 580, 280, 150, 100) && !unlocked[0] && coins < 5000) audio.playMenuSound("app/res/stop.wav", 0.8);
 			}
 		}
 	}
@@ -216,7 +216,7 @@ public class Shop extends MouseAdapter{
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			//Window left
 			if (Settings.darkMode) g.setColor(Color.darkGray);
@@ -315,7 +315,7 @@ public class Shop extends MouseAdapter{
 			if (Settings.darkMode) g.setColor(Color.lightGray);
 			else g.setColor(Color.darkGray);
 			g.drawString("v1.0.0", 765, 583);
-			g.drawString("JL33", 12, 583);
+			g.drawString("MUSUBI", 12, 583);
 
 			//Window left
 			if (Settings.darkMode) g.setColor(Color.darkGray);
