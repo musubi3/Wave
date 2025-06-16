@@ -4,6 +4,7 @@
 - [Upgrades](#upgrades)
 - [Skins](#skins)
 - [Saves](#saves)
+- [Multiplayer](#multiplayer)
 
 # About
 Wave is a simple 2D game I developed in Java during my senior year of high school. The project began as a tutorial by <a href="https://youtu.be/1gir2R7G9ws?si=3tcz1yNh1YVnM3s3" target="_blank" rel="noopener noreferrer">RealTutsGML</a> on YouTube, which provided the foundation for the core mechanics. From there, I extended the game by implementing custom features, original visual elements, and gameplay enhancements.
