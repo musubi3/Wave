@@ -27,114 +27,114 @@ public class Spawn{
 
 		if (scoreKeep >= nxtLevel) {
 			scoreKeep = 0;
-			hud.setLevel(hud.getLevel() + 1);
+			hud.set_level(1, hud.get_level(1) + 1);
 
-			if (Game.difficulty == 0) {
-				if (hud.getLevel() == 2) {
-					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+			if (Settings.difficulty == 0) {
+				if (hud.get_level(1) == 2) {
+					handler.add_object(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 3) {
-					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-					handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+				else if (hud.get_level(1) == 3) {
+					handler.add_object(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
+					handler.add_object(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 				}
-				else if (hud.getLevel() == 4) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 4) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 5) {
-					handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player, Color.magenta, handler, hud));
+				else if (hud.get_level(1) == 5) {
+					handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player, Color.magenta, handler, hud));
 					boolean player2Alive = false;
 					for(int i = 0; i < handler.object.size() && !player2Alive; i++) {
 						GameObject tempObject = handler.object.get(i);
 						if (tempObject.getID() == ID.Player2) player2Alive = true;
 					}
-					if (player2Alive) handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.Coin, handler, audio));
-					handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					if (player2Alive) handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.Coin, handler, audio));
+					handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 				}
-				else if (hud.getLevel() == 6) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 6) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 7) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-					handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+				else if (hud.get_level(1) == 7) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 				}
-				else if (hud.getLevel() == 8) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 8) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 9) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-					handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+				else if (hud.get_level(1) == 9) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 				}
-				else if (hud.getLevel() == 10) {
-					handler.addObject(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 10) {
+					handler.add_object(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
 			}
 			else {
-				if (hud.getLevel() == 2) {
-					handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				if (hud.get_level(1) == 2) {
+					handler.add_object(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 3) {
-					handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
-					handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 3) {
+					handler.add_object(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
+					handler.add_object(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 4) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 4) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 5) {
-					handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player, Color.magenta, handler, hud));
+				else if (hud.get_level(1) == 5) {
+					handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player, Color.magenta, handler, hud));
 					boolean player2Alive = false;
 					for(int i = 0; i < handler.object.size() && !player2Alive; i++) {
 						GameObject tempObject = handler.object.get(i);
 						if (tempObject.getID() == ID.Player2) player2Alive = true;
 					}
-					if (player2Alive) handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-					handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					if (player2Alive) handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 				}
-				else if (hud.getLevel() == 6) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 6) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 7) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 7) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 8) {
-					handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player, Color.magenta, handler, hud));
+				else if (hud.get_level(1) == 8) {
+					handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player, Color.magenta, handler, hud));
 					boolean player2Alive = false;
 					for(int i = 0; i < handler.object.size() && !player2Alive; i++) {
 						GameObject tempObject = handler.object.get(i);
 						if (tempObject.getID() == ID.Player2) player2Alive = true;
 					}
-					if (player2Alive) handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					if (player2Alive) handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
-				else if (hud.getLevel() == 9) {
-					handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-					handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+				else if (hud.get_level(1) == 9) {
+					handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 				}
-				else if (hud.getLevel() == 10) {
-					handler.addObject(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
-					handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				else if (hud.get_level(1) == 10) {
+					handler.add_object(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
+					handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 				}
 			}
 		}
 		if (scoreKeep2 >= nxtLevel) {
 			scoreKeep2 = 0;
-			hud.setLevel2(hud.getLevel2() + 1);
+			hud.set_level(2, hud.get_level(2) + 1);
 			if (Player.dead) {
 				for(int i = 0; i < handler.object.size(); i++) {
 					GameObject tempObject = handler.object.get(i);
@@ -144,90 +144,90 @@ public class Spawn{
 						}
 					}
 				}
-				if (Game.difficulty == 0) {
-					if (hud.getLevel2() == 2 && hud.getLevel() != 2) {
-						handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+				if (Settings.difficulty == 0) {
+					if (hud.get_level(2) == 2 && hud.get_level(1) != 2) {
+						handler.add_object(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 3 && hud.getLevel() != 3) {
-						handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-						handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					else if (hud.get_level(2) == 3 && hud.get_level(1) != 3) {
+						handler.add_object(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
+						handler.add_object(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 					}
-					else if (hud.getLevel2() == 4 && hud.getLevel() != 4) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 4 && hud.get_level(1) != 4) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 5  && hud.getLevel() != 2) {
-						handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					else if (hud.get_level(2) == 5  && hud.get_level(1) != 2) {
+						handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 					}
-					else if (hud.getLevel2() == 6  && hud.getLevel() != 6) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 6  && hud.get_level(1) != 6) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 7 && hud.getLevel() != 7) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					else if (hud.get_level(2) == 7 && hud.get_level(1) != 7) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 					}
-					else if (hud.getLevel2() == 8  && hud.getLevel() != 8) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 8  && hud.get_level(1) != 8) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 9  && hud.getLevel() != 9) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					else if (hud.get_level(2) == 9  && hud.get_level(1) != 9) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 					}
-					else if (hud.getLevel2() == 10 && hud.getLevel() != 10) {
-						handler.addObject(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 10 && hud.get_level(1) != 10) {
+						handler.add_object(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
 				}
 				else {
-					if (hud.getLevel2() == 2 && hud.getLevel() != 2) {
-						handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					if (hud.get_level(2) == 2 && hud.get_level(1) != 2) {
+						handler.add_object(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 3 && hud.getLevel() != 3) {
-						handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
-						handler.addObject(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 3 && hud.get_level(1) != 3) {
+						handler.add_object(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
+						handler.add_object(new HardEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.HardEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 4 && hud.getLevel() != 4) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 4 && hud.get_level(1) != 4) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 5  && hud.getLevel() != 2) {
-						handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					else if (hud.get_level(2) == 5  && hud.get_level(1) != 2) {
+						handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 					}
-					else if (hud.getLevel2() == 6  && hud.getLevel() != 6) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 6  && hud.get_level(1) != 6) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 7 && hud.getLevel() != 7) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 7 && hud.get_level(1) != 7) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 8  && hud.getLevel() != 8) {
-						handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 8  && hud.get_level(1) != 8) {
+						handler.add_object(new SmartEnemy(r.nextInt(Game.WIDTH-75), r.nextInt(Game.HEIGHT-75), ID.SmartEnemy, ID.Player2, new Color(160,0,255), handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
-					else if (hud.getLevel2() == 9  && hud.getLevel() != 9) {
-						handler.addObject(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
-						handler.addObject(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
+					else if (hud.get_level(2) == 9  && hud.get_level(1) != 9) {
+						handler.add_object(new FastEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.FastEnemy, handler, hud));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+						handler.add_object(new Health(r.nextInt(Game.WIDTH-250), -20, ID.healthPack, handler, audio));
 					}
-					else if (hud.getLevel2() == 10 && hud.getLevel() != 10) {
-						handler.addObject(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
-						handler.addObject(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
+					else if (hud.get_level(2) == 10 && hud.get_level(1) != 10) {
+						handler.add_object(new BossEnemy(Game.WIDTH / 2 -48, -120, ID.BossEnemy, handler));
+						handler.add_object(new Coin(r.nextInt(Game.WIDTH-100), r.nextInt(Game.HEIGHT-100), ID.Coin, handler, audio));
 					}
 				}
 			}

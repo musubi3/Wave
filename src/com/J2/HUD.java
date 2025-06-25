@@ -1,87 +1,101 @@
 package com.J2;
 
 import java.awt.Color;
-
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 public class HUD {
-	
+	private LoadGame load;
+
 	public static float HEALTH = 100;
 	public static float HEALTH2 = 100;
-	public int highScore = 0;
-	
+	public static int high_score = 0;
+
 	private int score, score2 = 0;
 	private int level = 1;
 	private int level2 = 1;
-	
-	public int isHighScore(int num) {
-		highScore = Math.max(highScore, num);
-		return highScore;
+
+	public HUD(LoadGame load) {
+		this.load = load;
 	}
-	
+
+	public boolean is_high_score(int num) {
+		return num > high_score;
+	}
+
 	public void tick() {
+
+		HEALTH = Utils.clamp(HEALTH, 0, 100);
+		HEALTH2 = Utils.clamp(HEALTH2, 0, 100);
 		
-		HEALTH = Game.clamp(HEALTH, 0, 100);
-		HEALTH2 = Game.clamp(HEALTH2, 0, 100);
-		
-		if (HEALTH > 0) score++;
-		if (HEALTH2 > 0 && Game.multiplayer) score2++;
-		
-		level = (int)Game.clamp(level, 0, 10);
-		level2 = (int)Game.clamp(level2, 0, 10);
+		score = (int) (Utils.clamp(score, 0, 99999999));
+		score2 = (int) (Utils.clamp(score2, 0, 99999999));
+
+		if (HEALTH > 0)
+			score++;
+		if (HEALTH2 > 0 && Game.multiplayer)
+			score2++;
+
+		level = (int) Utils.clamp(level, 0, 10);
+		level2 = (int) Utils.clamp(level2, 0, 10);
 	}
-	
+
 	public void render(Graphics g) {
-		
+		int bar_width = 300;
+		float multiplyer = bar_width / 100;
+
 		g.setFont(Game.titleFont3);
 		g.setColor(Color.gray);
-		g.fillRect(15, 17, 200, 8);
-		g.setColor(Color.getHSBColor((HEALTH)/360, 1f, 1f));
-		g.fillRect(15, 17, (int)HEALTH*2, 8);
-		if (Settings.darkMode) g.setColor(Color.white);
-		else g.setColor(Color.black);
-		g.drawRect(15, 17, 200, 8);
-		
-		if (Game.multiplayer) {
-			g.setColor(Color.gray);
-			g.fillRect(610, 17, 200, 8);
-			g.setColor(Color.getHSBColor((HEALTH2)/360, 1f, 1f));
-			g.fillRect(610, 17, (int)HEALTH2*2, 8);
-			if (Settings.darkMode) g.setColor(Color.white);
-			else g.setColor(Color.black);
-			g.drawRect(610, 17, 200, 8);
-			g.drawString("Player 1", 15, 13);
-			g.drawString("Player 2", 755, 13);
-			g.drawString("Score: " + score2, 737, 40);
-			g.drawString("Level: " + level2, 737, 55);
-		}
-		
+		g.fillRect(15, 17, bar_width, 8);
+		g.setColor(Color.getHSBColor((HEALTH) / 360, 1f, 1f));
+		g.fillRect(15, 17, (int) (HEALTH * multiplyer), 8);
+		g.setColor(Settings.darkMode ? Color.white : Color.black);
+		g.drawRect(15, 17, bar_width, 8);
+
 		g.drawString("Score: " + score, 15, 40);
 		g.drawString("Level: " + level, 15, 55);
+
+		if (Game.multiplayer) {
+			int bar_X = Game.WIDTH - bar_width - 32;
+
+			g.setColor(Color.gray);
+			g.fillRect(bar_X, 17, bar_width, 8);
+			g.setColor(Color.getHSBColor((HEALTH2) / 360, 1f, 1f));
+			g.fillRect(bar_X, 17, (int) (HEALTH2 * multiplyer), 8);
+			g.setColor(Settings.darkMode ? Color.white : Color.black);
+			g.drawRect(bar_X, 17, bar_width, 8);
+
+			FontMetrics fm = g.getFontMetrics();
+			int p2_width = fm.stringWidth("Player 2");
+			int score_width = fm.stringWidth("Score: " + score2);
+			int lvl_width = fm.stringWidth("Level: " + level2);
+
+			g.drawString(load.user == 0 ? "Player 1" : load.saves.get(load.user - 1), 15, 13);
+			g.drawString("Player 2", Game.WIDTH - p2_width - 32, 13);
+			g.drawString("Score: " + score2, Game.WIDTH - score_width - 32, 40);
+			g.drawString("Level: " + level2, Game.WIDTH - lvl_width - 32, 55);
+		}
 	}
-	
-	public void score(int score) {
-		this.score = score;
+
+	public int get_score(int player) {
+		return player == 1 ? score : score2;
 	}
-	public int getScore() {
-		return score;
+
+	public void set_score(int player, int score) {
+		if (player == 1)
+			this.score = score;
+		else
+			this.score2 = score;
 	}
-	public void score2(int score) {
-		this.score2 = score;
+
+	public int get_level(int level_type) {
+		return level_type == 1 ? level : level2;
 	}
-	public int getScore2() {
-		return score2;
-	}
-	public int getLevel() {
-		return level;
-	}
-	public void setLevel(int level) {
-		this.level = level;
-	}
-	public void setLevel2(int level) {
-		this.level2 = level;
-	}
-	public int getLevel2() {
-		return level2;
+
+	public void set_level(int level_type, int level) {
+		if (level_type == 1)
+			this.level = level;
+		else
+			this.level2 = level;
 	}
 }

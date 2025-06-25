@@ -12,6 +12,7 @@ public class Window extends Canvas {
 	
 	public Window(int width, int height, String title, Game game) {
 		JFrame frame = new JFrame(title);
+		// frame.setUndecorated(true);
 		
 		ImageIcon icon = new ImageIcon("app/res/logo.png");
 		frame.setIconImage(icon.getImage());

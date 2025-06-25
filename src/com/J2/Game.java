@@ -1,34 +1,34 @@
 package com.J2;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
-public class Game extends Canvas implements Runnable{
+/**
+ * Main Game class for Wave.
+ */
+public class Game extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = -2029340714966263948L;
 
-	public static final int WIDTH = 840, HEIGHT = WIDTH / 12 * 9;
+	// Game version
+	public static final String VERSION = "v1.1.0";
+
+	// Game dimensions
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = WIDTH / 16 * 9;
+
+	// Game state
 	public static boolean paused = false;
 	public static boolean multiplayer = false;
-	public static int difficulty = 0;
-	public static Font titleFont;
-	public static Font titleFont2;
-	public static Font titleFont3;
-	public static Font menuFont;
-	public static Font menuFont2;
-	public static Font menuFont3;
-	public static Font menuFont4;
-	
+
+	// Fonts
+	public static Font titleFont, titleFont2, titleFont3;
+	public static Font menuFont, menuFont2, menuFont3, menuFont4, menuFont5, menuFont6, menuFont7;
+
+	// Core game components
 	private Thread thread;
 	private boolean running = false;
 
@@ -43,47 +43,83 @@ public class Game extends Canvas implements Runnable{
 	private Shop shop;
 	private LoadGame load;
 	private About about;
-	private Easter egg;
-	
-	private Random r = new Random();
-	public static BufferedImage[] coin = new BufferedImage[7];
-	public static BufferedImage[] skins = new BufferedImage[4];
-	public static BufferedImage[] pyroBall = new BufferedImage[13];
-	public static BufferedImage[] greenBall = new BufferedImage[13];
+
+	// Listeners
+	private KeyInput key_input;
+
+	// Assets
+	public static BufferedImage[] coins = new BufferedImage[6];
+	public static BufferedImage[] skins = new BufferedImage[2];
+	public static BufferedImage[] pyro_ball = new BufferedImage[13];
+	public static BufferedImage[] green_ball = new BufferedImage[13];
+	public static BufferedImage[] rasengan = new BufferedImage[10];
 	public static BufferedImage healthPack;
-	
-	public enum STATE {
-		Menu,
-		Settings,
-		AudioSettings,
-		ApperanceSettings,
-		Game,
-		Difficulty,
-		Shop,
-		Load,
-		End,
-		End2,
-		About,
-		Egg
-	}
+	public static BufferedImage coin;
 
 	public static STATE gameState = STATE.Menu;
 
 	public Game() {
+		// Load fonts
+		try {
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+			titleFont = loadFont("app/fonts/title.ttf", 70f, ge);
+			titleFont2 = loadFont("app/fonts/title.ttf", 20f, ge);
+			titleFont3 = loadFont("app/fonts/title.ttf", 15f, ge);
+
+			menuFont = loadFont("app/fonts/PressStart2P.ttf", 20f, ge);
+			menuFont2 = loadFont("app/fonts/PressStart2P.ttf", 18f, ge);
+			menuFont3 = loadFont("app/fonts/PressStart2P.ttf", 16f, ge);
+			menuFont4 = loadFont("app/fonts/PressStart2P.ttf", 14f, ge);
+			menuFont5 = loadFont("app/fonts/PressStart2P.ttf", 12f, ge);
+			menuFont6 = loadFont("app/fonts/PressStart2P.ttf", 10f, ge);
+			menuFont7 = loadFont("app/fonts/PressStart2P.ttf", 8f, ge);
+
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+		}
+
+		// Load images
+		ImageLoader img_loader = new ImageLoader();
+
+		for (int i = 0; i < 6; i++)
+			coins[i] = img_loader.loadImage("app/res/Coin/coin" + (i + 1) + ".png");
+		coin = img_loader.loadImage("app/res/Coin/coin.png");
+
+		healthPack = img_loader.loadImage("app/res/health.png");
+		skins[0] = img_loader.loadImage("app/res/energyBall.png");
+		skins[1] = img_loader.loadImage("app/res/energy2.png");
+
+		for (int i = 0; i < 13; i++) {
+			pyro_ball[i] = img_loader.loadImage("app/res/pyroBall/pyroBall" + (i + 1) + ".png");
+			green_ball[i] = img_loader.loadImage("app/res/energyBall/e" + (i + 1) + ".png");
+
+			if (i < 10)
+				rasengan[i] = img_loader.loadImage("app/res/rasengan/rasengan" + (i + 1) + ".png");
+		}
+
+		// Initialize core components
 		audio = new AudioPlayer();
 		handler = new Handler();
-		hud = new HUD();
-		load = new LoadGame(audio, handler, hud);
-		menu = new Menu(handler, hud, audio, load);
-		settings = new Settings(audio, load);
-		end = new EndScreen(handler, hud, audio, load);
-		pause = new Paused(handler, hud, audio, load);
-		shop = new Shop(audio, load);
-		about = new About(audio);
-		egg = new Easter(audio, handler);
-		this.addKeyListener(new KeyBoard(load, handler));
-		this.addKeyListener(new KeyInput(handler, load, audio));
-		this.addKeyListener(egg);
+		load = new LoadGame(this, audio, handler);
+		hud = new HUD(load);
+		menu = new Menu(this, handler, hud, audio, load);
+		settings = new Settings(this, audio, load);
+		end = new EndScreen(this, handler, hud, audio, load);
+		pause = new Paused(this, handler, hud, audio, load);
+		shop = new Shop(this, audio, load);
+		about = new About(this, audio, load);
+
+		key_input = new KeyInput(handler, audio);
+
+		// Add input listeners
+		this.addKeyListener(about);
+		this.addKeyListener(load);
+		this.addKeyListener(settings);
+		this.addKeyListener(shop);
+		this.addKeyListener(pause);
+		this.addKeyListener(key_input);
+
 		this.addMouseListener(menu);
 		this.addMouseListener(settings);
 		this.addMouseListener(end);
@@ -91,6 +127,7 @@ public class Game extends Canvas implements Runnable{
 		this.addMouseListener(shop);
 		this.addMouseListener(load);
 		this.addMouseListener(about);
+
 		this.addMouseMotionListener(menu);
 		this.addMouseMotionListener(end);
 		this.addMouseMotionListener(settings);
@@ -98,49 +135,17 @@ public class Game extends Canvas implements Runnable{
 		this.addMouseMotionListener(shop);
 		this.addMouseMotionListener(load);
 		this.addMouseMotionListener(about);
-		
-		try {
-			titleFont = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")).deriveFont(70f);
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")));
-			titleFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")).deriveFont(20f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")));
-			titleFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")).deriveFont(15f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/title.ttf")));
-			menuFont = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(20f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
-			menuFont2 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(13f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
-			menuFont3 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(10f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
-			menuFont4 = Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")).deriveFont(12.5f);
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("app/fonts/menu.ttf")));
-		}catch (FontFormatException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
-		
-		
-		if (Settings.music) audio.playGameSound("app/res/music.wav", 1.122);
-		load.loadUser();
-		load.load(load.saveFiles.get(load.user));
 
 		spawner = new Spawn(handler, hud, audio);
-
 		new Window(WIDTH, HEIGHT, "WAVE", this);
-		
-		ImageLoader imgLoad = new ImageLoader();
-		for (int i = 0; i < 6; i++) {int file = i+1; coin[i] = imgLoad.loadImage("app/res/Coin/coin"+file+".png");}
-		coin[6] = imgLoad.loadImage("app/res/Coin/coin.png");
-		healthPack = imgLoad.loadImage("app/res/health.png");
-		skins[0] = imgLoad.loadImage("app/res/energyBall.png");
-		skins[1] = imgLoad.loadImage("app/res/rasengan.png");
-		skins[2] = imgLoad.loadImage("app/res/energy2.png");
-		for (int i = 0; i < 13; i++) {int file = i+1; pyroBall[i] = imgLoad.loadImage("app/res/pyroBall/pyroBall"+file+".png");}
-		for (int i = 0; i < 13; i++) {int file = i+1; greenBall[i] = imgLoad.loadImage("app/res/energyBall/e"+file+".png");}
-		
-			
-		for (int i = 0; i < 20; i++) {
-				if (gameState == STATE.Menu) handler.addObject(new MenuParticle(r.nextInt(WIDTH)-40, r.nextInt(HEIGHT)-70, ID.MenuParticle, handler));
-		}
-		if (load.user > 0) handler.addObject(new MenuPlayer(640,355,ID.MenuPlayer,handler));
+
+		// Add animated menu particles
+		Utils.render_menu_particles(handler);
+
+		// Add menu player if user is loaded
+		if (load.user > 0)
+			handler.add_object(new MenuPlayer((int) ((Game.WIDTH - 17) * 0.794), (int) (Game.HEIGHT * 0.36) + 82,
+					ID.MenuPlayer, handler, load));
 	}
 
 	public synchronized void start() {
@@ -153,7 +158,7 @@ public class Game extends Canvas implements Runnable{
 		try {
 			thread.join();
 			running = false;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -165,23 +170,23 @@ public class Game extends Canvas implements Runnable{
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		long timer = System.currentTimeMillis();
-//		int frames = 0;
-		while(running) {
+		// int frames = 0;
+		while (running) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
-			while(delta >= 1) {
+			while (delta >= 1) {
 				tick();
 				delta--;
 			}
-			if(running)
+			if (running)
 				render();
-//			frames++;
+			// frames++;
 
-			if(System.currentTimeMillis() - timer > 1000) {
+			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-//				System.out.println("FPS: " + frames);
-//				frames = 0;
+				// System.out.println("FPS: " + frames);
+				// frames = 0;
 			}
 		}
 		stop();
@@ -193,19 +198,24 @@ public class Game extends Canvas implements Runnable{
 				handler.tick();
 				hud.tick();
 				spawner.tick();
-				
-				if (Player.dead && !multiplayer) {
-					hud.isHighScore(hud.getScore());
-					if (hud.highScore == hud.getScore()) end.newHighScore = true;
+
+				if (!multiplayer && Player.dead) {
+					EndScreen.new_high_score = hud.is_high_score(hud.get_score(1));
+
+					if (EndScreen.new_high_score)
+						HUD.high_score = hud.get_score(1);
+
 					gameState = STATE.End;
 					audio.playMenuSound("app/res/gameOver.wav", 1.5);
 					HUD.HEALTH = 100;
 					Player.dead = false;
 				} else if (multiplayer && Player.dead && Player.dead2) {
-					hud.isHighScore(hud.getScore());
-					hud.isHighScore(hud.getScore2());
-					if (hud.highScore == hud.getScore() || hud.highScore == hud.getScore2()) end.newHighScore = true;
-					gameState = STATE.End2;
+					EndScreen.new_high_score = hud.is_high_score(hud.get_score(1)) || hud.is_high_score(hud.get_score(2));
+
+					if (EndScreen.new_high_score)
+						HUD.high_score = Math.max(hud.get_score(1), hud.get_score(2));
+
+					gameState = STATE.End;
 					audio.playMenuSound("app/res/gameOver.wav", 1.5);
 					HUD.HEALTH = 100;
 					HUD.HEALTH2 = 100;
@@ -213,93 +223,80 @@ public class Game extends Canvas implements Runnable{
 					Player.dead2 = false;
 				}
 			}
-		}
-		else if (gameState == STATE.Menu) {
+		} else if (gameState == STATE.Menu) {
 			menu.tick();
 			handler.tick();
-		}
-		else if (gameState == STATE.End || gameState == STATE.End2) {
+		} else if (gameState == STATE.End) {
 			end.tick();
 			handler.tick();
-		}
-		else if (gameState == STATE.Load) {
+		} else if (gameState == STATE.Load) {
 			load.tick();
 			handler.tick();
-		}
-		else if (gameState == STATE.Settings) {
+		} else if (gameState == STATE.Settings) {
 			settings.tick();
 			handler.tick();
-		}
-		else if (gameState == STATE.Shop) {
+		} else if (gameState == STATE.Shop) {
 			shop.tick();
 			handler.tick();
-		}
-		else if (gameState == STATE.About) {
+		} else if (gameState == STATE.About) {
 			about.tick();
 			handler.tick();
-		}
-		else if (gameState == STATE.Egg) {
-			egg.tick();
+		} else
 			handler.tick();
-		}
-		else handler.tick();
-		
+
 	}
 
 	private void render() {
 		BufferStrategy bs = this.getBufferStrategy();
-		if(bs == null) {
+		if (bs == null) {
 			this.createBufferStrategy(3);
 			return;
 		}
 
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+		// g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+		// RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
-
-		if (Settings.darkMode) g.setColor(Color.black);
-		else g.setColor(new Color(247,247,247));
+		g.setColor(Settings.darkMode ? Color.black : new Color(247, 247, 247));
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 
 		handler.render(g);
-		
-		if (paused) {
+
+		switch (gameState) {
+			case Game:
+				hud.render(g);
+				break;
+			case Menu:
+				menu.render(g);
+				break;
+			case Load:
+				load.render(g);
+				break;
+			case Settings:
+				settings.render(g);
+				break;
+			case End:
+				end.render(g);
+				break;
+			case Shop:
+				shop.render(g);
+				break;
+			case About:
+				about.render(g);
+				break;
+		}
+
+		if (paused)
 			pause.render(g);
-		}
-		if (gameState == STATE.Game) {
-			hud.render(g);
-		}
-		else if (gameState == STATE.Menu) {
-			menu.render(g);
-		}
-		else if (gameState == STATE.Load) {
-			load.render(g);
-		}
-		else if (gameState == STATE.Settings || gameState == STATE.AudioSettings 
-				 || gameState == STATE.ApperanceSettings || gameState == STATE.Difficulty) {
-			settings.render(g);
-		}
-		else if (gameState == STATE.End || gameState == STATE.End2 ) {
-			end.render(g);
-		}
-		else if (gameState == STATE.Shop) {
-			shop.render(g);
-		}
-		else if (gameState == STATE.About) {
-			about.render(g);
-		}
-		else if (gameState == STATE.Egg) {
-			egg.render(g);
-		}
+
 		g.dispose();
 		bs.show();
 	}
 
-	public static float clamp(float x, float min, float max) {
-		if (x >= max) return x = max;
-		else if (x <= min) return x = min;
-		else return x;
-
+	private Font loadFont(String path, float size, GraphicsEnvironment ge) throws IOException, FontFormatException {
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont(size);
+		ge.registerFont(font);
+		return font;
 	}
 
 	public static void main(String args[]) {

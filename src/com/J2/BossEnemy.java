@@ -34,16 +34,16 @@ public class BossEnemy extends GameObject {
 			if (velX > 0) velX += 0.005f;
 			else if (velX < 0) velX -= 0.005f;
 			
-			velX = Game.clamp(velX, -10, 10);
+			velX = Utils.clamp(velX, -10, 10);
 			
 			int spawn = r.nextInt(6);
-			if (spawn == 0) handler.addObject(new BossEnemyBullet(x+48, y+48, ID.BasicEnemy, handler));
+			if (spawn == 0) handler.add_object(new BossEnemyBullet(x+48, y+48, ID.BasicEnemy, handler));
 		}
 		
 //		if (y <= -101 || y >= Game.HEIGHT-132) velY *= -1;
 		if (x <= 0 || x >= Game.WIDTH-108) velX *= -1;
 		
-		handler.addObject(new Trail(x, y, ID.Trail, Color.red, 96, 96, 0.1f,handler));
+		handler.add_object(new Trail(x, y, ID.Trail, Color.red, 96, 96, 0.1f,handler));
 	}
 
 	public void render(Graphics g) {

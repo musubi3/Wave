@@ -7,9 +7,9 @@
 - [Multiplayer](#multiplayer)
 
 # About
-Wave is a simple 2D game I developed in Java during my senior year of high school. The project began as a tutorial by <a href="https://youtu.be/1gir2R7G9ws?si=3tcz1yNh1YVnM3s3" target="_blank" rel="noopener noreferrer">RealTutsGML</a> on YouTube, which provided the foundation for the core mechanics. From there, I extended the game by implementing custom features, original visual elements, and gameplay enhancements.
+Wave is a simple 2D game I developed in Java during my junior year of high school. The project began as a tutorial by <a href="https://youtu.be/1gir2R7G9ws?si=3tcz1yNh1YVnM3s3" target="_blank" rel="noopener noreferrer">RealTutsGML</a> on YouTube, which provided the foundation for the core mechanics. From there, I extended the game by implementing custom features, original visual elements, and gameplay enhancements.
 
-If you'd like to try it out, you can download the Windows version <a href="https://github.com/musubi3/Wave/releases" target="_blank" rel="noopener noreferrer">here</a>.
+If you'd like to try it out, you can download the latest version of the game <a href="https://github.com/musubi3/Wave/releases" target="_blank" rel="noopener noreferrer">here</a>.
 
 <img class="screenshot" src="https://i.postimg.cc/mDsLj0zh/home.jpg" alt="Home Screenshot">
 

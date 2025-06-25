@@ -1,10 +1,15 @@
-Default
-Sketchers
-Act My Age
-Normal
-Hard
-0
-true
-true
-true
-0
+name=
+time=
+difficulty=0
+music=true
+sound=true
+dark_mode=true
+high_score=0
+speed=3
+health=0
+coins=0
+skin=0
+skin1_unlocked=false
+skin2_unlocked=false
+skin3_unlocked=false
+song_index=0

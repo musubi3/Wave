@@ -14,7 +14,7 @@ public class BossEnemyBullet extends GameObject {
 		super(x, y, id);
 		
 		this.handler = handler;
-		if (Game.difficulty == 0)  {
+		if (Settings.difficulty == 0)  {
 			velX = r.nextInt(5 - -5) + -5;
 			velY = 5;
 		} else {
@@ -27,9 +27,9 @@ public class BossEnemyBullet extends GameObject {
 		x += velX;
 		y += velY;
 		
-		if (y >= Game.HEIGHT) handler.removeObject(this);
+		if (y >= Game.HEIGHT) handler.remove_object(this);
 		
-		handler.addObject(new Trail(x, y, ID.Trail, Color.getHSBColor(1f * r.nextInt(40)/360, 1f, 1f), 16, 16, 0.05f,handler));
+		handler.add_object(new Trail(x, y, ID.Trail, Color.getHSBColor(1f * r.nextInt(40)/360, 1f, 1f), 16, 16, 0.05f,handler));
 	}
 
 	public void render(Graphics g) {

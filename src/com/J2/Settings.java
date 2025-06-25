@@ -1,887 +1,857 @@
 package com.J2;
 
-import java.awt.Color;
-
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
-import com.J2.Game.STATE;
+public class Settings extends MouseAdapter implements KeyListener {
+	private enum SETTING {
+		Controls, Audio, Theme, Difficulty
+	}
 
-public class Settings extends MouseAdapter{
-
-	private AudioPlayer audio;
-	private LoadGame load;
-
-	private boolean open = false;
-	private boolean open2 = false;
-
-	public static int timer = 25;
-	public static String[] songs = {"Default","Sketchers","Act My Age"};
-	public static String[] diff = {"Normal","Hard"};
+	public static int timer = 15;
+	public static String[] songs = { "Default", "Sketchers", "Act My Age" };
+	public static String[] song_files = { "app/res/music.wav", "app/res/sketchers.wav", "app/res/1D.wav" };
+	public static String[] difficulties = { "Normal", "Hard" };
 	public static boolean music = true;
 	public static boolean sound = true;
+	public static int song_index = 0;
 	public static boolean darkMode = true;
+	public static int difficulty = 0;
 
-	private Color color = Color.black;
-	private Color color2 = Color.black;
-	private Color color3 = Color.black;
-	private Color color4 = Color.black;
-	private Color color5 = Color.darkGray;
-	private Color color6 = Color.darkGray;
-	private Color color7 = Color.darkGray;
-	private Color color8 = Color.darkGray;
-	private Color color9 = Color.black;
-	private Color color10 = Color.white;
-	private Color color11 = Color.white;
-	private Color color12 = Color.white;
-	private Color color13 = Color.black;
-	private Color color14 = Color.white;
-	private Color color15 = Color.white;
-	private Color color16 = Color.darkGray;
+	private Game game;
+	private AudioPlayer audio;
+	private LoadGame load;
+	private static SETTING setting;
+	private static ArrayList<SETTING> all_settings = new ArrayList<>(
+			Arrays.asList(new SETTING[] { SETTING.Controls, SETTING.Audio, SETTING.Theme, SETTING.Difficulty }));
+	private static boolean drop_down = false;
 
-	public Settings(AudioPlayer audio, LoadGame load) {
+	private int x_offset = 17;
+	private int y_offset = 47;
+
+	// Window
+	private int window_width = (int) (Game.WIDTH * 0.6);
+	private int window_height = (int) (Game.HEIGHT * 0.7);
+	private int window_X = (Game.WIDTH - x_offset - window_width) / 2;
+	private int window_Y = (Game.HEIGHT - y_offset - window_height) / 2;
+
+	// Sections
+	private int section_X = window_X + 15;
+	private int[] section_Y = new int[4];
+	private int section_width = window_width / 3 - 30;
+	private int section_height = (window_height - 30) / 4 - 40;
+
+	// Horizontal Carousel Toggle
+	private int carousel_width;
+	private int carousel_height;
+	private int carousel_Y;
+
+	private int carousel_X1;
+	private int carousel_X2;
+
+	// Toggle Switch
+	int toggle_width = 50;
+	int toggle_height;
+	int toggle_X = window_X + window_width - toggle_width - 30;
+
+	int toggle_Y1;
+	int toggle_Y2;
+
+	// Drop Down Button
+	private int drop_down_width;
+	private int drop_down_X;
+	private int drop_down_Y;
+
+	// Song Buttons
+	private int song_width;
+	private int song_height;
+	private int song_X;
+
+	private int[] song_Y = new int[songs.length];
+
+	private static Color[] colors = new Color[5];
+	private static Color[] theme_colors = new Color[2];
+	private static Color[] diff_colors = new Color[2];
+	private static Color[] toggle_colors = new Color[2];
+	private static Color[] song_colors = new Color[songs.length];
+	private static Color drop_down_color;
+
+	public Settings(Game game, AudioPlayer audio, LoadGame load) {
+		this.game = game;
 		this.audio = audio;
 		this.load = load;
+		setting = SETTING.Controls;
+
+		for (int i = 0; i < section_Y.length; i++)
+			section_Y[i] = window_Y + 30 + 15 * (i + 1) + section_height * i;
+
+		reset_colors();
+	}
+
+	public static void reset_colors() {
+		Arrays.fill(theme_colors, darkMode ? Color.lightGray : Color.darkGray);
+		Arrays.fill(diff_colors, darkMode ? Color.lightGray : Color.darkGray);
+		Arrays.fill(song_colors, darkMode ? Color.lightGray : Color.darkGray);
+
+		drop_down_color = darkMode ? drop_down ? new Color(80, 80, 80) : new Color(30, 30, 30)
+				: drop_down ? new Color(140, 140, 140) : new Color(230, 230, 230);
+
+		toggle_colors = new Color[] {
+				darkMode ? music ? new Color(0, 180, 0) : new Color(80, 80, 80)
+						: music ? new Color(0, 170, 0) : new Color(150, 150, 150),
+
+				darkMode ? sound ? new Color(0, 180, 0) : new Color(80, 80, 80)
+						: sound ? new Color(0, 170, 0) : new Color(150, 150, 150)
+		};
+
+		colors[0] = darkMode ? new Color(160, 160, 160) : new Color(130, 130, 130);
+		for (int i = 1; i <= 4; i++) {
+			if (i == all_settings.indexOf(setting) + 1)
+				colors[i] = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+			else
+				colors[i] = darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230);
+		}
+	}
+
+	private Map<String, Map<String, Integer>> setupTextDimensions() {
+		return new HashMap<>() {
+			{
+				put("Settings", Utils.get_text_dimensions("Settings", Game.menuFont5));
+				put("Back", Utils.get_text_dimensions("Back", Game.menuFont5));
+				put("Controls", Utils.get_text_dimensions("Controls", Game.menuFont3));
+				put("Audio", Utils.get_text_dimensions("Audio", Game.menuFont3));
+				put("Theme", Utils.get_text_dimensions("Theme", Game.menuFont3));
+				put("Difficulty", Utils.get_text_dimensions("Difficulty", Game.menuFont3));
+				put("Player", Utils.get_text_dimensions("Player 1", Game.menuFont4));
+				put("Move", Utils.get_text_dimensions("Move", Game.menuFont5));
+				put("W", Utils.get_text_dimensions("W", Game.menuFont5));
+				put("A", Utils.get_text_dimensions("A", Game.menuFont5));
+				put("S", Utils.get_text_dimensions("S", Game.menuFont5));
+				put("D", Utils.get_text_dimensions("D", Game.menuFont5));
+				put("Up", Utils.get_text_dimensions("↑", Game.menuFont5));
+				put("Down", Utils.get_text_dimensions("↓", Game.menuFont5));
+				put("Left", Utils.get_text_dimensions("←", Game.menuFont5));
+				put("Right", Utils.get_text_dimensions("→", Game.menuFont5));
+				put("ESC", Utils.get_text_dimensions("ESC", Game.menuFont5));
+				put("Theme", Utils.get_text_dimensions("Theme", Game.menuFont4));
+				put("Difficulty", Utils.get_text_dimensions("Difficulty", Game.menuFont4));
+				put("Music", Utils.get_text_dimensions("Music", Game.menuFont4));
+				put("▶", Utils.get_text_dimensions("▶", Game.menuFont4));
+				put("◀", Utils.get_text_dimensions("◀", Game.menuFont4));
+				put("▼", Utils.get_text_dimensions("▼", Game.menuFont5));
+				put("Dark", Utils.get_text_dimensions("Dark", Game.menuFont4));
+				put("Light", Utils.get_text_dimensions("Light", Game.menuFont4));
+				put("Normal", Utils.get_text_dimensions("Normal", Game.menuFont4));
+				put("Hard", Utils.get_text_dimensions("Hard", Game.menuFont4));
+				put(songs[0], Utils.get_text_dimensions(songs[0], Game.menuFont4));
+				put(songs[1], Utils.get_text_dimensions(songs[1], Game.menuFont4));
+				put(songs[2], Utils.get_text_dimensions(songs[2], Game.menuFont4));
+			}
+		};
+	}
+
+	private void exit_helper() {
+		this.audio.playMenuSound("app/res/button4.wav", 0.27);
+		colors = new Color[] {
+				Settings.darkMode ? new Color(160, 160, 160) : new Color(130, 130, 130),
+				Settings.darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140),
+				Settings.darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230),
+				Settings.darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230),
+				Settings.darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230),
+		};
+
+		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		setting = SETTING.Controls;
+		Game.gameState = STATE.Menu;
+	}
+
+	private void section_helper(SETTING new_setting, int color_num) {
+		this.audio.playMenuSound("app/res/button4.wav", 0.27);
+		colors[all_settings.indexOf(setting) + 1] = Settings.darkMode ? new Color(30, 30, 30)
+				: new Color(230, 230, 230);
+		setting = new_setting;
+		colors[color_num] = Settings.darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+	}
+
+	private void theme_helper(boolean theme) {
+		this.audio.playMenuSound("app/res/button4.wav", 0.27);
+		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		darkMode = theme;
+
+		reset_colors();
+		Menu.reset_colors();
+		LoadGame.reset_colors();
+		About.reset_colors();
+		Shop.reset_colors();
+		Paused.reset_colors();
+
+		if (load.user > 0)
+			load.save(load.save_files.get(load.user), null);
+	}
+
+	private void difficulty_helper(int difficulty) {
+		this.audio.playMenuSound("app/res/button4.wav", 0.27);
+		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		Settings.difficulty = difficulty;
+		Arrays.fill(diff_colors, darkMode ? Color.lightGray : Color.darkGray);
+
+		if (load.user > 0)
+			load.save(load.save_files.get(load.user), null);
+	}
+
+	private void audio_helper(boolean is_music) {
+		if (is_music) {
+			music = !music;
+			toggle_colors[0] = darkMode ? music ? new Color(0, 180, 0) : new Color(80, 80, 80)
+					: music ? new Color(0, 170, 0) : new Color(150, 150, 150);
+			if (!music)
+				audio.stopMusic();
+			else
+				audio.playGameSound(song_files[song_index], 1.122);
+
+		} else {
+			sound = !sound;
+			toggle_colors[1] = darkMode ? sound ? new Color(0, 180, 0) : new Color(80, 80, 80)
+					: sound ? new Color(0, 170, 0) : new Color(150, 150, 150);
+		}
+
+		this.audio.playMenuSound("app/res/button4.wav", 0.27);
+
+		if (load.user > 0)
+			load.save(load.save_files.get(load.user), null);
+	}
+
+	private void song_helper(int new_index) {
+		this.audio.playMenuSound("app/res/button4.wav", 0.27);
+		drop_down = false;
+		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		Arrays.fill(song_colors, Settings.darkMode ? Color.lightGray : Color.darkGray);
+
+		if (song_index != new_index) {
+			audio.stopMusic();
+			audio.playGameSound(song_files[new_index], 1.122);
+		}
+
+		song_index = new_index;
+
+		if (load.user > 0)
+			load.save(load.save_files.get(load.user), null);
 	}
 
 	public void mousePressed(MouseEvent e) {
+		if (Game.gameState != STATE.Settings)
+			return;
+			
 		int mx = e.getX();
 		int my = e.getY();
+		int mouse = e.getButton();
+		Boolean left_click = mouse == MouseEvent.BUTTON1;
 
-		//Back from settings
-		if (Game.gameState == STATE.Settings || Game.gameState == STATE.AudioSettings 
-				|| Game.gameState == STATE.ApperanceSettings || Game.gameState == STATE.Difficulty) {
-			if (mouseOver(mx, my, 75, 55, 60, 20)) {
-				Game.gameState = STATE.Menu;
-				color16 = Color.darkGray;
-				open = false;
-				open2 = false;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+		if (left_click && timer <= 0) {
+			// Back
+			if (Utils.mouse_over(mx, my, window_X + 15, window_Y + 5, 58, 18)
+					|| !Utils.mouse_over(mx, my, window_X, window_Y, window_width, window_height)) {
+				exit_helper();
 			}
-			if (!mouseOver(mx, my,65, 50, 700, 450)) {
-				Game.gameState = STATE.Menu;
-				open = false;
-				open2 = false;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Controls
+			else if (Utils.mouse_over(mx, my, section_X, section_Y[0], section_width, section_height)) {
+				section_helper(SETTING.Controls, 1);
 			}
-		}
-		//Appearance
-		if ((Game.gameState == STATE.Settings || Game.gameState == STATE.AudioSettings || Game.gameState == STATE.Difficulty) && timer <= 0) {
-			if (mouseOver(mx, my, 80, 265, 269, 70)) {
-				Game.gameState = STATE.ApperanceSettings;
-				open = false;
-				open2 = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Audio
+			else if (Utils.mouse_over(mx, my, section_X, section_Y[1], section_width, section_height)) {
+				section_helper(SETTING.Audio, 2);
 			}
-		}
-		//Audio
-		if (Game.gameState == STATE.Settings || Game.gameState == STATE.ApperanceSettings || Game.gameState == STATE.Difficulty) {
-			if (mouseOver(mx, my, 80, 180, 269, 70)) {
-				Game.gameState = STATE.AudioSettings;
-				open = false;
-				open2 = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Theme
+			else if (Utils.mouse_over(mx, my, section_X, section_Y[2], section_width, section_height)) {
+				section_helper(SETTING.Theme, 3);
 			}
-		}
-		//Settings
-		if (Game.gameState == STATE.ApperanceSettings || Game.gameState == STATE.AudioSettings || Game.gameState == STATE.Difficulty) {
-			if (mouseOver(mx, my, 80, 95, 269, 70)) {
-				Game.gameState = STATE.Settings;
-				open = false;
-				open2 = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Difficulty
+			else if (Utils.mouse_over(mx, my, section_X, section_Y[3], section_width, section_height)) {
+				section_helper(SETTING.Difficulty, 4);
 			}
-		}
-		//Difficulty
-		if ((Game.gameState == STATE.Settings || Game.gameState == STATE.AudioSettings || Game.gameState == STATE.ApperanceSettings) && timer <= 0) {
-			if (mouseOver(mx, my, 80, 350, 269, 70)) {
-				Game.gameState = STATE.Difficulty;
-				open = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Light Mode
+			else if (setting == SETTING.Theme && darkMode
+					&& Utils.mouse_over(mx, my, carousel_X1, carousel_Y, carousel_width, carousel_height)) {
+				theme_helper(false);
 			}
-		}
-		if (Game.gameState == STATE.AudioSettings) {
-			//Music on/off
-			if (mouseOver(mx, my, 655, 117, 75, 25)) {
-				if (music) {
-					music = false;
-					audio.stopMusic();
-				}
-				else {
-					music = true;
-					if (songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
-					else if (songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
-					else if (songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
-				}
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Dark Mode
+			else if (setting == SETTING.Theme && !darkMode
+					&& Utils.mouse_over(mx, my, carousel_X2, carousel_Y, carousel_width, carousel_height)) {
+				theme_helper(true);
 			}
-			//Sfx on/off
-			else if (mouseOver(mx, my, 655, 162, 75, 25)) {
-				if (sound) sound = false;
-				else sound = true;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Hard
+			else if (setting == SETTING.Difficulty && Settings.difficulty == 0
+					&& Utils.mouse_over(mx, my, carousel_X1, carousel_Y, carousel_width, carousel_height)) {
+				difficulty_helper(1);
 			}
-			//Expand songs
-			else if (mouseOver(mx, my, 695, 207, 35, 25) && !open) {
-				open = true;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Normal
+			else if (setting == SETTING.Difficulty && Settings.difficulty == 1
+					&& Utils.mouse_over(mx, my, carousel_X2, carousel_Y, carousel_width, carousel_height)) {
+				difficulty_helper(0);
 			}
-			//Collapse songs
-			else if (mouseOver(mx, my, 695, 207, 35, 25) && open) {
-				open = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Music
+			else if (setting == SETTING.Audio
+					&& Utils.mouse_over(mx, my, toggle_X, toggle_Y1, toggle_width, toggle_height)) {
+				audio_helper(true);
 			}
-			//Collapse songs
-			else if (!mouseOver(mx, my, 495, 232, 200, 50) && open) {
-				open = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// SFX
+			else if (setting == SETTING.Audio
+					&& Utils.mouse_over(mx, my, toggle_X, toggle_Y2, toggle_width, toggle_height)) {
+				audio_helper(false);
 			}
-			//New Song
-			else if (mouseOver(mx, my, 495, 232, 200, 25) && open) {
-				String temp = "";
-				temp = songs[0];
-				songs[0] = songs[1];
-				songs[1] = temp;
-				open = false;
-				audio.stopMusic();
-				if (songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
-				else if (songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
-				else if (songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Open drop down menu
+			else if (!drop_down && setting == SETTING.Audio
+					&& Utils.mouse_over(mx, my, drop_down_X, drop_down_Y, drop_down_width, drop_down_width)) {
+				drop_down_color = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+				drop_down = true;
 			}
-			//New Song 2
-			else if (mouseOver(mx, my, 495, 257, 200, 25) && open) {
-				String temp = "";
-				temp = songs[0];
-				songs[0] = songs[2];
-				songs[2] = temp;
-				open = false;
-				audio.stopMusic();
-				if (songs[0].equals("Default")) audio.playGameSound("app/res/music.wav", 1.122);
-				else if (songs[0].equals("Sketchers")) audio.playGameSound("app/res/sketchers.wav", 1.122);
-				else if (songs[0].equals("Act My Age")) audio.playGameSound("app/res/1D.wav", 1.122);
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			// Close drop down menu
+			else if (drop_down && setting == SETTING.Audio
+					&& Utils.mouse_over(mx, my, drop_down_X, drop_down_Y, drop_down_width, drop_down_width)) {
+				drop_down = false;
 			}
-		}
-		else if (Game.gameState == STATE.ApperanceSettings) {
-			//DarkMode
-			if (mouseOver(mx, my, 655, 117, 75, 25)) {
-				if (darkMode) darkMode = false;
-				else darkMode = true;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
-				Menu.menuColor = Color.lightGray;
-				Menu.menuColor2 = Color.lightGray;
-				Menu.menuColor3 = Color.lightGray;
-				Menu.menuColor4 = Color.lightGray;
-				Menu.menuColor5 = Color.lightGray;
-				Menu.menuColor6 = Color.lightGray;
-				Menu.about = Color.lightGray;
+
+			else if (setting == SETTING.Audio && drop_down
+					&& !Utils.mouse_over(mx, my, song_X, song_Y[0], song_width, song_height)
+					&& !Utils.mouse_over(mx, my, song_X, song_Y[1], song_width, song_height)
+					&& !Utils.mouse_over(mx, my, song_X, song_Y[2], song_width, song_height)) {
+				drop_down = false;
+				drop_down_color = darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230);
 			}
-			//LightMode
-			else if (mouseOver(mx, my, 655, 162, 75, 25)) {
-				if (darkMode) darkMode = false;
-				else darkMode = true;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
-				Menu.menuColor = Color.darkGray;
-				Menu.menuColor2 = Color.darkGray;
-				Menu.menuColor3 = Color.darkGray;
-				Menu.menuColor4 = Color.darkGray;
-				Menu.menuColor5 = Color.darkGray;
-				Menu.menuColor6 = Color.darkGray;
-				Menu.about = Color.darkGray;
+
+			// Select song
+			else if (setting == SETTING.Audio && drop_down
+					&& Utils.mouse_over(mx, my, song_X, song_Y[0], song_width, song_height)) {
+				song_helper(0);
 			}
-		}
-		else if (Game.gameState == STATE.Difficulty) {
-			//Expand menu
-			if (mouseOver(mx, my, 695, 117, 35, 25) && !open2) {
-				open2 = true;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			else if (setting == SETTING.Audio && drop_down
+					&& Utils.mouse_over(mx, my, song_X, song_Y[1], song_width, song_height)) {
+				song_helper(1);
 			}
-			//Collapse
-			else if (mouseOver(mx, my, 695, 117, 35, 25) && open2) {
-				open2 = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
-			}
-			//Collapse
-			else if (!mouseOver(mx, my, 495, 132, 200, 25) && open2) {
-				open2 = false;
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
-			}
-			//Change Diff
-			else if (mouseOver(mx, my, 495, 142, 200, 25) && open2) {
-				String temp = "";
-				temp = diff[0];
-				diff[0] = diff[1];
-				diff[1] = temp;
-				open2 = false;
-				if (diff[0].equals("Normal")) Game.difficulty = 0;
-				else if (diff[0].equals("Hard")) Game.difficulty = 1;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+
+			else if (setting == SETTING.Audio && drop_down
+					&& Utils.mouse_over(mx, my, song_X, song_Y[2], song_width, song_height)) {
+				song_helper(2);
 			}
 		}
 	}
 
 	public void mouseReleased(MouseEvent e) {
-
 	}
 
 	public void mouseMoved(MouseEvent e) {
+		if (Game.gameState != STATE.Settings)
+			return;
+
 		int mx = e.getX();
 		int my = e.getY();
 
-		if (Game.gameState == STATE.Settings || Game.gameState == STATE.AudioSettings || Game.gameState == STATE.ApperanceSettings || Game.gameState == STATE.Difficulty) {
-			if (mouseOver(mx, my, 75, 55, 60, 20)) {
-				if (Settings.darkMode) color16 = new Color(0,190,0);
-				else color16 = new Color(0,170,0);
-			}else {
-				color16 = Color.darkGray;
-			}
+		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+		for (int i = 0; i < 4; i++)
+			if (Utils.mouse_over(mx, my, section_X, section_Y[i], section_width, section_height))
+				colors[i + 1] = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+
+		// Back
+		if (Utils.mouse_over(mx, my, window_X + 15, window_Y + 5, 58, 18)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[0] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
 		}
-		
-		if (Game.gameState == STATE.AudioSettings) {
-			//Music on/off
-			if (mouseOver(mx, my, 655, 117, 75, 25)) {
-				if (Settings.darkMode) color = Color.green;
-				else color = new Color(0,170,0);
-			}else {
-				if (Settings.darkMode) color = Color.black;
-				else color = Color.darkGray;
-			}
-			if (mouseOver(mx, my, 655, 117, 75, 25)) {
-				if (Settings.darkMode) color5 = Color.green;
-				else color5 = new Color(0,170,0);
-			}else {
-				color5 = Color.darkGray;
-			}
 
-			//Sfx on/off
-			if (mouseOver(mx, my, 655, 162, 75, 25)) {
-				if (Settings.darkMode) color2 = Color.green;
-				else color2 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color2 = Color.black;
-				else color2 = Color.darkGray;
-			}
-			if (mouseOver(mx, my, 655, 162, 75, 25)) {
-				if (Settings.darkMode) color6 = Color.green;
-				else color6 = new Color(0,170,0);
-			} else {
-				color6 = Color.darkGray;
-			}
-
-			//Open Songs
-			if (mouseOver(mx, my, 695, 207, 35, 25)) {
-				if (Settings.darkMode) color9 = Color.green;
-				else color9 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color9 = Color.black;
-				else color9 = Color.darkGray;
-			}
-
-			//Select Song
-			if (mouseOver(mx, my, 495, 207, 200, 25) && open) {
-				if (Settings.darkMode) color12 = Color.green;
-				else color12 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color12 = Color.white;
-				else color12 = Color.darkGray;
-			}
-			if (mouseOver(mx, my, 495, 232, 200, 25)) {
-				if (Settings.darkMode) color10 = Color.green;
-				else color10 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color10 = Color.white;
-				else color10 = Color.darkGray;
-			}
-			if (mouseOver(mx, my, 495, 257, 200, 25)) {
-				if (Settings.darkMode) color11 = Color.green;
-				else color11 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color11 = Color.white;
-				else color11 = Color.darkGray;
-			}
+		// Controls
+		else if (Utils.mouse_over(mx, my, section_X, section_Y[0], section_width, section_height)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[1] = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
 		}
-		else if (Game.gameState == STATE.ApperanceSettings) {
-			//DarkMode
-			if (mouseOver(mx, my, 655, 117, 75, 25)) {
-				if (Settings.darkMode) color3 = Color.green;
-				else color3 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color3 = Color.black;
-				else color3 = Color.darkGray;
-			}
-			if (mouseOver(mx, my, 655, 117, 75, 25)) {
-				if (Settings.darkMode) color7 = Color.green;
-				else color7 = new Color(0,170,0);
-			} else {
-				color7 = Color.darkGray;
-			}
 
-			//LightMode
-			if (mouseOver(mx, my, 655, 162, 75, 25)) {
-				if (Settings.darkMode) color4 = Color.green;
-				else color4 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color4 = Color.black;
-				else color4 = Color.darkGray;
-			}
-			if (mouseOver(mx, my, 655, 162, 75, 25)) {
-				if (Settings.darkMode) color8 = Color.green;
-				else color8 = new Color(0,170,0);
-			} else {
-				color8 = Color.darkGray;
-			}
+		// Audio
+		else if (Utils.mouse_over(mx, my, section_X, section_Y[1], section_width, section_height)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[2] = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
 		}
-		else if (Game.gameState == STATE.Difficulty) {
-			if (mouseOver(mx, my, 695, 117, 35, 25)) {
-				if (Settings.darkMode) color13 = Color.green;
-				else color13 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color13 = Color.black;
-				else color13 = Color.darkGray;
-			}
-			
-			if (mouseOver(mx, my, 495, 117, 200, 25) && open2) {
-				if (Settings.darkMode) color14 = Color.green;
-				else color14 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color14 = Color.white;
-				else color14 = Color.darkGray;
-			}
-			
-			if (mouseOver(mx, my, 495, 142, 200, 25)) {
-				if (Settings.darkMode) color15 = Color.green;
-				else color15 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) color15 = Color.white;
-				else color15 = Color.darkGray;
-			}
+
+		// Theme
+		else if (Utils.mouse_over(mx, my, section_X, section_Y[2], section_width, section_height)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[3] = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+		}
+
+		// Difficulty
+		else if (Utils.mouse_over(mx, my, section_X, section_Y[3], section_width, section_height)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[4] = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+		}
+
+		// Dark/Light Mode
+		else if (Utils.mouse_over(mx, my, carousel_X1, carousel_Y, carousel_width, carousel_height) && darkMode
+				&& setting == SETTING.Theme) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			theme_colors[0] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		else if (Utils.mouse_over(mx, my, carousel_X2, carousel_Y, carousel_width, carousel_height) && !darkMode
+				&& setting == SETTING.Theme) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			theme_colors[1] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		// Normal/Hard Mode
+		else if (Utils.mouse_over(mx, my, carousel_X1, carousel_Y, carousel_width, carousel_height)
+				&& Settings.difficulty == 0 && setting == SETTING.Difficulty) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			diff_colors[0] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		else if (Utils.mouse_over(mx, my, carousel_X2, carousel_Y, carousel_width, carousel_height)
+				&& Settings.difficulty == 1 && setting == SETTING.Difficulty) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			diff_colors[1] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		// Music/SFX
+		else if (Utils.mouse_over(mx, my, toggle_X, toggle_Y1, toggle_width, toggle_height)
+				&& setting == SETTING.Audio) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			toggle_colors[0] = darkMode ? music ? new Color(0, 210, 0) : new Color(110, 110, 110)
+					: music ? new Color(0, 150, 0) : new Color(130, 130, 130);
+		}
+
+		else if (Utils.mouse_over(mx, my, toggle_X, toggle_Y2, toggle_width, toggle_height)
+				&& setting == SETTING.Audio) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			toggle_colors[1] = darkMode ? sound ? new Color(0, 210, 0) : new Color(110, 110, 110)
+					: sound ? new Color(0, 140, 0) : new Color(120, 120, 120);
+		}
+
+		else if (Utils.mouse_over(mx, my, drop_down_X, drop_down_Y, drop_down_width, drop_down_width)
+				&& setting == SETTING.Audio) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			drop_down_color = darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
+		}
+
+		else if (Utils.mouse_over(mx, my, song_X, song_Y[0], song_width, song_height) && drop_down
+				&& setting == SETTING.Audio) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			Arrays.fill(song_colors, Settings.darkMode ? Color.lightGray : Color.darkGray);
+			song_colors[0] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		else if (Utils.mouse_over(mx, my, song_X, song_Y[1], song_width, song_height) && drop_down
+				&& setting == SETTING.Audio) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			Arrays.fill(song_colors, Settings.darkMode ? Color.lightGray : Color.darkGray);
+			song_colors[1] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		else if (Utils.mouse_over(mx, my, song_X, song_Y[2], song_width, song_height) && drop_down
+				&& setting == SETTING.Audio) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			Arrays.fill(song_colors, Settings.darkMode ? Color.lightGray : Color.darkGray);
+			song_colors[2] = darkMode ? new Color(0, 180, 0) : new Color(0, 170, 0);
+		}
+
+		else {
+			reset_colors();
 		}
 	}
 
-	private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
-		if (mx > x && mx < x + width) {
-			if (my > y && my < y + height) {
-				return true;
-			}
-			else return false;
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (Game.gameState != STATE.Settings)
+			return;
+
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			audio.playMenuSound("app/res/button4.wav", 0.27);
+			if (load.user > 0)
+				load.save(load.save_files.get(load.user), null);
+			Game.gameState = STATE.Menu;
 		}
-		else return false;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 
 	public void tick() {
-		Game.clamp(timer, 0, 25);
+		if (setting != SETTING.Audio)
+			drop_down = false;
+
+		Utils.clamp(timer, 0, 15);
 		timer--;
 	}
 
-	public void render(Graphics g) {
-		if (Game.gameState == STATE.Settings) {
+	public void render(Graphics2D g) {
+		if (Game.gameState != STATE.Settings)
+			return;
 
-			//Version
-			g.setFont(Game.titleFont2);
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("v1.0.0", 765, 583);
-			g.drawString("MUSUBI", 12, 583);
+		Map<String, Map<String, Integer>> dims = setupTextDimensions();
+		Composite original = g.getComposite();
 
-			//Window left
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(200,200,200));
-			g.fillRect(65, 50, 700, 450);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 50, 700, 450);
-			g.fillRect(65, 50, 700, 30);
+		Utils.render_menu(g, load.user, load.saves, true);
 
-			//Text
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("Settings", 522, 70);
+		// Darken Background
+		g.setColor(new Color(0, 0, 0, (int) (255 * 0.8)));
+		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
-			//Back
-			g.setColor(color16);
-			g.setFont(Game.menuFont2);
-			g.drawRect(75, 55, 60, 20);
-			g.drawString("Back", 82, 69);
+		// Window
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+		g.setColor(Settings.darkMode ? Color.darkGray : new Color(200, 200, 200));
+		g.fillRoundRect(window_X, window_Y, window_width, window_height, 20, 20);
+		g.setColor(Settings.darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+		g.drawRoundRect(window_X, window_Y, window_width, window_height, 20, 20);
 
-			//Window right
-			if (darkMode) g.setColor(new Color(50,50,50));
-			else g.setColor(Color.lightGray);
-			g.fillRect(65, 80, 300, 420);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 80, 300, 420);
+		Path2D path = new Path2D.Double();
+		int radius = 10;
+		path.moveTo(window_X + radius, window_Y);
+		path.lineTo(window_X + window_width - radius, window_Y);
+		path.quadTo(window_X + window_width, window_Y, window_X + window_width, window_Y + radius);
+		path.lineTo(window_X + window_width, window_Y + 30);
+		path.lineTo(window_X, window_Y + 30);
+		path.lineTo(window_X, window_Y + radius);
+		path.quadTo(window_X, window_Y, window_X + radius, window_Y);
+		path.closePath();
+		g.fill(path);
 
-			//Controls
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(230,230,230));
-			g.fillRect(80, 95, 269, 70);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.drawRect(80, 95, 269, 70);
-			g.setFont(Game.menuFont);
-			if (!darkMode) g.setColor(new Color(150,150,150));
-			g.drawString("Controls", 147, 137);
+		// Text
+		g.setComposite(original);
+		g.setFont(Game.menuFont5);
+		g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+		Map<String, Integer> about_dims = dims.get("Settings");
+		g.drawString("Settings", window_X + (window_width - about_dims.get("width")) / 2,
+				window_Y + (30 - about_dims.get("height")) / 2 + about_dims.get("ascent"));
 
-			//Audio
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 180, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 180, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Audio", 175, 220);
+		// Back
+		g.setColor(colors[0]);
+		g.setFont(Game.menuFont5);
+		g.drawRoundRect(window_X + 15, window_Y + 5, 58, 18, 10, 10);
+		Map<String, Integer> back_dims = dims.get("Back");
+		g.drawString("Back", window_X + 15 + (60 - back_dims.get("width")) / 2,
+				window_Y + (30 - back_dims.get("height")) / 2 + back_dims.get("ascent"));
 
-			//Appearance
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 265, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 265, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Appearance", 127, 305);
+		// Divider
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+		g.setColor(Settings.darkMode ? new Color(35, 35, 35) : new Color(230, 230, 230));
+		g.fillRect(window_X + window_width / 3, window_Y + 45, 3, window_height - 65);
 
-			//Difficulty
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 350, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 350, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Difficulty", 143, 390);
+		// Sections
+		g.setFont(Game.menuFont3);
+		String[] sections = new String[] { "Controls", "Audio", "Theme", "Difficulty" };
+		for (int i = 0; i < section_Y.length; i++) {
+			g.setColor(colors[i + 1]);
+			g.fillRoundRect(section_X, section_Y[i], section_width, section_height, 20, 20);
+			g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+			g.drawRoundRect(section_X, section_Y[i], section_width, section_height, 20, 20);
 
-			//Player 1
-			g.setFont(Game.menuFont2);
-			g.setColor(new Color(0, 130, 210));
-			g.drawString("Player 1", 410, 150);
-			g.setFont(Game.menuFont4);
-			g.drawString("W   -  Up", 410, 200);
-			g.drawRect(408, 188, 17, 17);
-			g.drawString("A   -  Left", 410, 230);
-			g.drawRect(408, 218, 17, 17);
-			g.drawString("S   -  Down", 410, 260);
-			g.drawRect(408, 248, 17, 17);
-			g.drawString("D   -  Right", 410, 290);
-			g.drawRect(408, 278, 17, 17);
-
-			g.setFont(Game.menuFont2);
-			g.setColor(new Color(0,170,0));
-			g.drawString("Player 2", 560, 150);
-			g.setFont(Game.menuFont4);
-			g.drawString("Up Arrow   -  Up", 560, 200);
-			g.drawRect(558, 188, 83, 17);
-			g.drawString("Left Arrow   -  Left", 560, 230);
-			g.drawRect(558, 218, 103, 17);
-			g.drawString("Down Arrow   -  Down", 560, 260);
-			g.drawRect(558, 248, 104, 17);
-			g.drawString("Right Arrow   -  Right", 560, 290);
-			g.drawRect(558, 278, 108, 17);
-			
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.setFont(Game.menuFont2);
-			g.drawString("P   -  Pause Game", 410, 350);
-			g.drawRect(408, 338, 17, 17);
+			g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+			Map<String, Integer> section_dims = dims.get(sections[i]);
+			g.drawString(sections[i], section_X + (section_width - section_dims.get("width")) / 2,
+					section_Y[i] + (section_height - section_dims.get("height")) / 2 + section_dims.get("ascent"));
 		}
-		if (Game.gameState == STATE.AudioSettings) {
-			//Version
-			g.setFont(Game.titleFont2);
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("v1.0.0", 765, 583);
-			g.drawString("MUSUBI", 12, 583);
 
-			//Window left
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(200,200,200));
-			g.fillRect(65, 50, 700, 450);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 50, 700, 450);
-			g.fillRect(65, 50, 700, 30);
-
-			//Text
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("Settings", 522, 70);
-
-			//Back
-			g.setColor(color16);
-			g.setFont(Game.menuFont2);
-			g.drawRect(75, 55, 60, 20);
-			g.drawString("Back", 82, 69);
-
-			//Window right
-			if (darkMode) g.setColor(new Color(50,50,50));
-			else g.setColor(Color.lightGray);
-			g.fillRect(65, 80, 300, 420);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 80, 300, 420);
-
-			//Controls
-			if (!darkMode) g.setColor(Color.white);
-			g.fillRect(80, 95, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 95, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Controls", 147, 137);
-
-			//Audio
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(230,230,230));
-			g.fillRect(80, 180, 269, 70);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.drawRect(80, 180, 269, 70);
-			g.setFont(Game.menuFont);
-			if (!darkMode) g.setColor(new Color(150,150,150));
-			g.drawString("Audio", 175, 220);
-
-			//Appearance
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 265, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 265, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Appearance", 127, 305);
-
-			//Difficulty
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 350, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 350, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Difficulty", 143, 390);
-
-			g.setFont(Game.menuFont2);
-			if (!darkMode) g.setColor(Color.white);
-			else g.setColor(Color.lightGray);
-			g.fillRect(655, 117, 75, 25);
-			if (!darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.lightGray);
-			g.drawString("Music", 390, 136);
-			g.setColor(color);
-			g.drawRect(655, 117, 75, 25);
-			g.setColor(color5);
-			g.setFont(Game.menuFont2);
-			if (music) g.drawString("ON", 680, 133);
-			else g.drawString("OFF", 674, 133);
-
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("Sfx", 390, 181);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(655, 162, 75, 25);
-			g.setColor(color2);
-			g.drawRect(655, 162, 75, 25);
-			g.setColor(color6);
-			g.setFont(Game.menuFont2);
-			if (sound) g.drawString("ON", 680, 178);
-			else g.drawString("OFF", 674, 178);
-
-			if (!open) {
-				g.setFont(Game.menuFont2);
-				if (darkMode) g.setColor(Color.lightGray);
-				else g.setColor(Color.darkGray);
-				g.drawString("Song", 390, 226);
-				if (!darkMode) g.setColor(Color.lightGray);
-				g.fillRect(695, 207, 35, 25);
-				g.setColor(color9);
-				g.drawRect(695, 207, 35, 25);
-				g.drawString("V",706,225);
-				g.drawString("_",706,215);
-				if (darkMode) g.setColor(new Color(50,50,50));
-				else g.setColor(Color.white);
-				g.fillRect(495, 207, 200, 25);
-				if (darkMode) g.setColor(Color.black);
-				else g.setColor(Color.darkGray);
-				g.drawRect(495, 207, 200, 25);
-				if (darkMode) g.setColor(Color.white);
-				else g.setColor(Color.darkGray);
+		int content_X = window_X + window_width / 3;
+		switch (setting) {
+			// Controls
+			case Controls:
+				// Players
 				g.setFont(Game.menuFont4);
-				g.drawString(songs[0],500,223);
-			}
-			else {
-				g.setFont(Game.menuFont2);
-				if (darkMode) g.setColor(Color.lightGray);
-				else g.setColor(Color.darkGray);
-				g.drawString("Song", 390, 226);
-				if (!darkMode) g.setColor(Color.lightGray);
-				g.fillRect(695, 207, 35, 25);
-				g.setColor(color9);
-				g.drawRect(695, 207, 35, 25);
-				g.drawString("V",706,225);
-				g.drawString("_",706,215);
-				if (darkMode) g.setColor(new Color(50,50,50));
-				else g.setColor(Color.white);
-				g.fillRect(495, 207, 200, 75);
-				if (darkMode) g.setColor(Color.black);
-				else g.setColor(Color.darkGray);
-				g.drawRect(495, 207, 200, 25);
-				g.drawRect(495, 232, 200, 25);
-				g.drawRect(495, 257, 200, 25);
-				g.setColor(color12);
+				g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+				Map<String, Integer> player_dims = dims.get("Player");
+				int player_Y = window_Y + 45 + player_dims.get("height");
+				int p1_X = content_X + content_X / 3 - player_dims.get("width") / 2;
+				int p2_X = content_X + 2 * content_X / 3 - player_dims.get("width") / 2;
+				g.drawString("Player 1", p1_X, player_Y);
+				g.drawString("Player 2", p2_X, player_Y);
+
+				// Buttons
+				int button_width = 40;
+				int arc = 10;
+				Function<Integer, Integer> get_button_X = x -> x + (player_dims.get("width") - button_width) / 2;
+				Function<Integer, Integer> get_button_Y = i -> player_Y + 25 * i + button_width * (i - 1);
+				BiFunction<Integer, String, Integer> center_X = (x, word) -> get_button_X.apply(x)
+						+ (button_width - dims.get(word).get("width")) / 2;
+				BiFunction<Integer, String, Integer> center_Y = (i, word) -> get_button_Y.apply(i)
+						+ (button_width - dims.get(word).get("height")) / 2 + dims.get(word).get("ascent");
+
+				for (int i = 1; i <= 5; i++) {
+					g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+					g.fillRoundRect(get_button_X.apply(p1_X), get_button_Y.apply(i), button_width, button_width,
+							arc, arc);
+
+					if (i != 5)
+						g.fillRoundRect(get_button_X.apply(p2_X), get_button_Y.apply(i), button_width, button_width,
+								arc, arc);
+
+					g.setColor(Color.black);
+					g.drawRoundRect(get_button_X.apply(p1_X), get_button_Y.apply(i), button_width, button_width,
+							arc, arc);
+					if (i != 5)
+						g.drawRoundRect(get_button_X.apply(p2_X), get_button_Y.apply(i), button_width, button_width,
+								arc, arc);
+				}
+
+				g.setColor(Settings.darkMode ? Color.darkGray : Color.lightGray);
+				g.setFont(Game.menuFont5);
+				g.drawString("W", center_X.apply(p1_X, "W"), center_Y.apply(1, "W"));
+				g.drawString("A", center_X.apply(p1_X, "A"), center_Y.apply(2, "A"));
+				g.drawString("S", center_X.apply(p1_X, "S"), center_Y.apply(3, "S"));
+				g.drawString("D", center_X.apply(p1_X, "D"), center_Y.apply(4, "D"));
+				g.drawString("ESC", center_X.apply(p1_X, "ESC"), center_Y.apply(5, "ESC"));
+
+				g.drawString("↑", center_X.apply(p2_X, "Up"), center_Y.apply(1, "Up"));
+				g.drawString("↓", center_X.apply(p2_X, "Down"), center_Y.apply(2, "Down"));
+				g.drawString("←", center_X.apply(p2_X, "Left"), center_Y.apply(3, "Left"));
+				g.drawString("→", center_X.apply(p2_X, "Right"), center_Y.apply(4, "Right"));
+
+				// Actions
+				g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+				Map<String, Integer> move_dims = dims.get("Move");
+				Function<Integer, Integer> get_action_Y = i -> get_button_Y.apply(i)
+						+ (button_width - move_dims.get("height")) / 2 + move_dims.get("ascent");
+				g.drawString("Up", content_X + 30, get_action_Y.apply(1));
+				g.drawString("Down", content_X + 30, get_action_Y.apply(2));
+				g.drawString("Left", content_X + 30, get_action_Y.apply(3));
+				g.drawString("Right", content_X + 30, get_action_Y.apply(4));
+				g.drawString("Pause", content_X + 30, get_action_Y.apply(5));
+				break;
+
+			// Audio
+			case Audio:
+				// Options
+				g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
 				g.setFont(Game.menuFont4);
-				g.drawString(songs[0],500,223);
-				g.setColor(color10);
-				g.drawString(songs[1],500,248);
-				g.setColor(color11);
-				g.drawString(songs[2],500,273);
-			}
-		}
-		if (Game.gameState == STATE.ApperanceSettings) {
-			//Version
-			g.setFont(Game.titleFont2);
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("v1.0.0", 765, 583);
-			g.drawString("MUSUBI", 12, 583);
+				Map<String, Integer> music_dims = dims.get("Music");
+				int padding = 50;
+				int music_Y = window_Y + 79 + music_dims.get("height");
+				g.drawString("Music", content_X + 30, music_Y);
+				g.drawString("SFX", content_X + 30, music_Y + music_dims.get("height") + padding);
+				g.drawString("Song", content_X + 30, music_Y + (music_dims.get("height") + padding) * 2);
 
-			//Window left
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(200,200,200));
-			g.fillRect(65, 50, 700, 450);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 50, 700, 450);
-			g.fillRect(65, 50, 700, 30);
+				// Music
+				g.setColor(toggle_colors[0]);
+				toggle_height = music_dims.get("height") + 6;
+				toggle_Y1 = music_Y - toggle_height;
+				g.fillRoundRect(toggle_X, toggle_Y1, toggle_width, toggle_height, 10, 10);
+				g.setColor(darkMode ? new Color(100, 100, 100) : new Color(120, 120, 120));
+				g.drawRoundRect(toggle_X, toggle_Y1, toggle_width, toggle_height, 10, 10);
+				g.setComposite(original);
+				g.setColor(new Color(220, 220, 220));
+				if (music) {
+					g.fillRoundRect(toggle_X + toggle_width - toggle_height + 3, toggle_Y1 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+					g.setColor(Color.lightGray);
+					g.drawRoundRect(toggle_X + toggle_width - toggle_height + 3, toggle_Y1 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+				} else {
+					g.fillRoundRect(toggle_X + 3, toggle_Y1 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+					g.setColor(Color.lightGray);
+					g.drawRoundRect(toggle_X + 3, toggle_Y1 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+				}
 
-			//Text
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("Settings", 522, 70);
+				// SFX
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+				g.setColor(toggle_colors[1]);
+				toggle_Y2 = music_Y + music_dims.get("height") + padding - toggle_height;
+				g.fillRoundRect(toggle_X, toggle_Y2, toggle_width, toggle_height, 10, 10);
+				g.setColor(darkMode ? new Color(100, 100, 100) : new Color(120, 120, 120));
+				g.drawRoundRect(toggle_X, toggle_Y2, toggle_width, toggle_height, 10, 10);
+				g.setComposite(original);
+				g.setColor(new Color(220, 220, 220));
+				if (sound) {
+					g.fillRoundRect(toggle_X + toggle_width - toggle_height + 3, toggle_Y2 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+					g.setColor(Color.lightGray);
+					g.drawRoundRect(toggle_X + toggle_width - toggle_height + 3, toggle_Y2 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+				} else {
+					g.fillRoundRect(toggle_X + 3, toggle_Y2 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+					g.setColor(Color.lightGray);
+					g.drawRoundRect(toggle_X + 3, toggle_Y2 + 3, toggle_height - 6,
+							toggle_height - 6, 5, 5);
+				}
 
-			//Back
-			g.setColor(color16);
-			g.setFont(Game.menuFont2);
-			g.drawRect(75, 55, 60, 20);
-			g.drawString("Back", 82, 69);
+				// Song
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+				g.setColor(drop_down_color);
+				drop_down_width = music_dims.get("height") + 14;
+				drop_down_X = window_X + window_width - drop_down_width - 30;
+				drop_down_Y = music_Y + (music_dims.get("height") + padding) * 2 - drop_down_width + 2;
+				g.fillRoundRect(drop_down_X, drop_down_Y, drop_down_width, drop_down_width, 10, 10);
+				g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+				g.drawRoundRect(drop_down_X, drop_down_Y, drop_down_width, drop_down_width, 10, 10);
 
-			//Window right
-			if (darkMode) g.setColor(new Color(50,50,50));
-			else g.setColor(Color.lightGray);
-			g.fillRect(65, 80, 300, 420);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 80, 300, 420);
+				int display_song_width = 250;
+				int display_song_height = drop_down_width;
+				int display_song_X = drop_down_X - display_song_width - 10;
+				int display_song_Y = drop_down_Y;
+				g.setColor(darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+				g.fillRoundRect(display_song_X, display_song_Y, display_song_width, display_song_height, 10, 10);
+				g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+				g.drawRoundRect(display_song_X, display_song_Y, display_song_width, display_song_height, 10, 10);
+				g.setColor(darkMode ? Color.lightGray : Color.darkGray);
+				g.drawString(songs[song_index], display_song_X + 15,
+						display_song_Y + (display_song_height - dims.get(songs[song_index]).get("height")) / 2
+								+ dims.get(songs[song_index]).get("ascent"));
 
-			//Controls
-			if (!darkMode) g.setColor(Color.white);
-			g.fillRect(80, 95, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 95, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Controls", 147, 137);
+				g.setFont(Game.menuFont5);
+				g.drawString("▼", drop_down_X + (drop_down_width - dims.get("▼").get("width")) / 2, drop_down_Y
+						+ (drop_down_width - dims.get("▼").get("height")) / 2 + dims.get("▼").get("ascent"));
 
-			//Audio
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 180, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 180, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Audio", 175, 220);
+				if (drop_down) {
+					int song_option_height = 32;
+					g.setColor(darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+					g.fillRoundRect(display_song_X, display_song_Y + display_song_height + 10, display_song_width,
+							song_option_height * songs.length, 10, 10);
+					g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+					g.drawRoundRect(display_song_X, display_song_Y + display_song_height + 10, display_song_width,
+							song_option_height * songs.length, 10, 10);
 
-			//Appearance
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(230,230,230));
-			g.fillRect(80, 265, 269, 70);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.drawRect(80, 265, 269, 70);
-			g.setFont(Game.menuFont);
-			if (!darkMode) g.setColor(new Color(150,150,150));
-			g.drawString("Appearance", 127, 305);
+					for (int i = 1; i <= 2; i++) {
+						g.setColor(darkMode ? new Color(70, 70, 70) : new Color(190, 190, 190));
+						g.drawLine(display_song_X + 1,
+								(display_song_Y + display_song_height + 10) + song_option_height * i,
+								display_song_X + display_song_width - 2,
+								(display_song_Y + display_song_height + 10) + song_option_height * i);
+					}
 
-			//Difficulty
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 350, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 350, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Difficulty", 142, 390);
+					g.setFont(Game.menuFont4);
+					for (int i = 0; i < songs.length; i++) {
+						song_width = display_song_width;
+						song_height = song_option_height;
+						song_X = display_song_X;
+						song_Y[i] = (display_song_Y + display_song_height + 10) + song_height * i;
 
-			//Dark Mode toggle
-			g.setFont(Game.menuFont2);
-			if (!darkMode) g.setColor(Color.white);
-			else g.setColor(Color.lightGray);
-			g.fillRect(655, 117, 75, 25);
-			if (!darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.lightGray);
-			g.drawString("Dark Mode", 390, 136);
-			g.setColor(color3);
-			g.drawRect(655, 117, 75, 25);
-			g.setColor(color7);
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.drawString("ON", 680, 133);
-			else g.drawString("OFF", 674, 133);
+						g.setColor(song_colors[i]);
+						int song_button_y = (display_song_Y + display_song_height + 10) + song_option_height * i;
+						song_button_y = song_button_y + (display_song_height - dims.get(songs[i]).get("height")) / 2
+								+ dims.get(songs[i]).get("ascent");
+						g.drawString(songs[i], display_song_X + 15, song_button_y + 2);
+					}
+				}
+				break;
 
-			//Light Mode toggle
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("Light Mode", 390, 181);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(655, 162, 75, 25);
-			g.setColor(color4);
-			g.drawRect(655, 162, 75, 25);
-			g.setColor(color8);
-			g.setFont(Game.menuFont2);
-			if (!darkMode) g.drawString("ON", 680, 178);
-			else g.drawString("OFF", 674, 178);
-		}
-		if (Game.gameState == STATE.Difficulty) {
-			//Version
-			g.setFont(Game.titleFont2);
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("v1.0.0", 765, 583);
-			g.drawString("MUSUBI", 12, 583);
-
-			//Window left
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(200,200,200));
-			g.fillRect(65, 50, 700, 450);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 50, 700, 450);
-			g.fillRect(65, 50, 700, 30);
-
-			//Text
-			g.setFont(Game.menuFont2);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawString("Settings", 522, 70);
-
-			//Back
-			g.setColor(color16);
-			g.setFont(Game.menuFont2);
-			g.drawRect(75, 55, 60, 20);
-			g.drawString("Back", 82, 69);
-
-			//Window right
-			if (darkMode) g.setColor(new Color(50,50,50));
-			else g.setColor(Color.lightGray);
-			g.fillRect(65, 80, 300, 420);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(new Color(230,230,230));
-			g.drawRect(65, 80, 300, 420);
-
-			//Controls
-			if (!darkMode) g.setColor(Color.white);
-			g.fillRect(80, 95, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 95, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Controls", 147, 137);
-
-			//Audio
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 180, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 180, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Audio", 175, 220);
-
-			//Appearance
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(80, 265, 269, 70);
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(80, 265, 269, 70);
-			g.setFont(Game.menuFont);
-			g.drawString("Appearance", 127, 305);
-
-			//Difficulty
-			if (darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(230,230,230));
-			g.fillRect(80, 350, 269, 70);
-			if (darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.drawRect(80, 350, 269, 70);
-			g.setFont(Game.menuFont);
-			if (!darkMode) g.setColor(new Color(150,150,150));
-			g.drawString("Difficulty", 142, 390);
-
-			if (!open2) {
-				g.setFont(Game.menuFont2);
-				if (darkMode) g.setColor(Color.lightGray);
-				else g.setColor(Color.darkGray);
-				g.drawString("Difficulty", 390, 136);
-				if (!darkMode) g.setColor(Color.lightGray);
-				g.fillRect(695, 117, 35, 25);
-				g.setColor(color13);
-				g.drawRect(695, 117, 35, 25);
-				g.drawString("V",706,135);
-				g.drawString("_",706,125);
-				if (darkMode) g.setColor(new Color(50,50,50));
-				else g.setColor(Color.white);
-				g.fillRect(495, 117, 200, 25);
-				if (darkMode) g.setColor(Color.black);
-				else g.setColor(Color.darkGray);
-				g.drawRect(495, 117, 200, 25);
-				if (darkMode) g.setColor(Color.white);
-				else g.setColor(Color.darkGray);
+			// Theme
+			case Theme:
+				// Options
+				g.setColor(darkMode ? Color.lightGray : Color.darkGray);
 				g.setFont(Game.menuFont4);
-				g.drawString(diff[0],500,133);
-			}
-			else {
-				g.setFont(Game.menuFont2);
-				if (darkMode) g.setColor(Color.lightGray);
-				else g.setColor(Color.darkGray);
-				g.drawString("Difficulty", 390, 136);
-				if (!darkMode) g.setColor(Color.lightGray);
-				g.fillRect(695, 117, 35, 25);
-				g.setColor(color13);
-				g.drawRect(695, 117, 35, 25);
-				g.drawString("V",706,135);
-				g.drawString("_",706,125);
-				if (darkMode) g.setColor(new Color(50,50,50));
-				else g.setColor(Color.white);
-				g.fillRect(495, 117, 200, 50);
-				if (darkMode) g.setColor(Color.black);
-				else g.setColor(Color.darkGray);
-				g.drawRect(495, 117, 200, 25);
-				g.drawRect(495, 142, 200, 25);
-				g.setColor(color14);
+				Map<String, Integer> theme_dims = dims.get("Theme");
+				int theme_Y = window_Y + 79 + theme_dims.get("height");
+				g.drawString("Theme", content_X + 30, theme_Y);
+
+				// Toggles
+				int theme_menu_width = 140;
+				int theme_menu_height = theme_dims.get("height") + 14;
+				int theme_menu_X = content_X + 2 * window_width / 3 - theme_menu_width - 30;
+				int theme_menu_Y = window_Y + 71;
+				g.setColor(darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+				g.fillRoundRect(theme_menu_X, theme_menu_Y, theme_menu_width, theme_menu_height, 10, 10);
+				g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+				g.drawRoundRect(theme_menu_X, theme_menu_Y, theme_menu_width, theme_menu_height, 10, 10);
+
+				carousel_width = 28;
+				carousel_height = theme_menu_height;
+				carousel_Y = theme_menu_Y;
+
+				carousel_X1 = theme_menu_X + theme_menu_width - 28;
+				carousel_X2 = theme_menu_X;
+
+				int right_icon_X = theme_menu_X + theme_menu_width - dims.get("▶").get("width") - 7;
+				int left_icon_X = theme_menu_X + 7;
+				if (darkMode) {
+					g.setColor(theme_colors[0]);
+					g.drawString("▶", right_icon_X, theme_Y);
+					g.setColor(new Color(80, 80, 80));
+					g.drawString("◀", left_icon_X, theme_Y);
+					g.setColor(darkMode ? Color.lightGray : Color.darkGray);
+					g.drawString("Dark", theme_menu_X + (theme_menu_width - dims.get("Dark").get("width")) / 2,
+							theme_Y);
+				} else {
+					g.setColor(new Color(170, 170, 170));
+					g.drawString("▶", right_icon_X, theme_Y);
+					g.setColor(theme_colors[1]);
+					g.drawString("◀", left_icon_X, theme_Y);
+					g.setColor(darkMode ? Color.lightGray : Color.darkGray);
+					g.drawString("Light", theme_menu_X + (theme_menu_width - dims.get("Light").get("width")) / 2,
+							theme_Y);
+				}
+				break;
+
+			// Difficulty
+			case Difficulty:
+				// Options
+				g.setColor(darkMode ? Color.lightGray : Color.darkGray);
 				g.setFont(Game.menuFont4);
-				g.drawString(diff[0],500,133);
-				g.setColor(color15);
-				g.drawString(diff[1],500,158);
-			}
+				Map<String, Integer> diff_dims = dims.get("Difficulty");
+				int diff_Y = window_Y + 79 + diff_dims.get("height");
+				g.drawString("Difficulty", content_X + 30, diff_Y);
+
+				// Toggles
+				int diff_menu_width = 140;
+				int diff_menu_height = diff_dims.get("height") + 14;
+				int diff_menu_X = content_X + 2 * window_width / 3 - diff_menu_width - 30;
+				int diff_menu_Y = window_Y + 71;
+				g.setColor(darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+				g.fillRoundRect(diff_menu_X, diff_menu_Y, diff_menu_width, diff_menu_height, 10, 10);
+				g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+				g.drawRoundRect(diff_menu_X, diff_menu_Y, diff_menu_width, diff_menu_height, 10, 10);
+
+				carousel_width = 28;
+				carousel_height = diff_menu_height;
+				carousel_Y = diff_menu_Y;
+
+				carousel_X1 = diff_menu_X + diff_menu_width - 28;
+				carousel_X2 = diff_menu_X;
+
+				right_icon_X = diff_menu_X + diff_menu_width - dims.get("▶").get("width") - 7;
+				left_icon_X = diff_menu_X + 7;
+				if (difficulty == 0) {
+					g.setColor(diff_colors[0]);
+					g.drawString("▶", right_icon_X, diff_Y);
+					g.setColor(darkMode ? new Color(80, 80, 80) : new Color(170, 170, 170));
+					g.drawString("◀", left_icon_X, diff_Y);
+					g.setColor(darkMode ? Color.lightGray : Color.darkGray);
+					g.drawString("Normal", diff_menu_X + (diff_menu_width - dims.get("Normal").get("width")) / 2,
+							diff_Y);
+				} else {
+					g.setColor(darkMode ? new Color(80, 80, 80) : new Color(170, 170, 170));
+					g.drawString("▶", right_icon_X, diff_Y);
+					g.setColor(diff_colors[1]);
+					g.drawString("◀", left_icon_X, diff_Y);
+					g.setColor(darkMode ? Color.lightGray : Color.darkGray);
+					g.drawString("Hard", diff_menu_X + (diff_menu_width - dims.get("Hard").get("width")) / 2,
+							diff_Y);
+				}
+				break;
 		}
 	}
 }

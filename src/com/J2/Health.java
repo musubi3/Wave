@@ -21,8 +21,8 @@ public class Health extends GameObject {
 		x += velX;
 		y += velY;
 		
-		if (y >= Game.HEIGHT) handler.removeObject(this);
-		handler.addObject(new Trail2(x, y, ID.Trail, 0.1f, Game.healthPack, handler));
+		if (y >= Game.HEIGHT) handler.remove_object(this);
+		handler.add_object(new Trail2(x, y, ID.Trail, 0.1f, Game.healthPack, handler));
 		
 		collision();
 	}
@@ -37,14 +37,14 @@ public class Health extends GameObject {
 				GameObject tempObject = handler.object.get(i);
 				if(tempObject.getID() == ID.Player) {
 					if (getBounds().intersects(tempObject.getBounds())) {
-						handler.removeObject(this);
+						handler.remove_object(this);
 						HUD.HEALTH += 10;
 						audio.playMenuSound("app/res/healthSFX.wav", 1.5);
 					}
 				}
 				else if(tempObject.getID() == ID.Player2) {
 					if (getBounds().intersects(tempObject.getBounds())) {
-						handler.removeObject(this);
+						handler.remove_object(this);
 						HUD.HEALTH2 += 10;
 						audio.playMenuSound("app/res/healthSFX.wav", 1.5);
 					}

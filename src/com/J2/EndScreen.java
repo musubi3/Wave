@@ -1,281 +1,253 @@
 package com.J2;
 
-import java.awt.Color;
-
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Random;
-
-import com.J2.Game.STATE;
+import java.awt.geom.Path2D;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EndScreen extends MouseAdapter {
-
+	private Game game;
 	private Handler handler;
 	private HUD hud;
 	private AudioPlayer audio;
 	private LoadGame load;
-	private Random r = new Random();
 
-	private Color endColor = Color.darkGray;
-	private Color endColor2 = Color.darkGray;
+	private static int x_offset = 17;
+	private static int y_offset = 47;
 
-	public boolean newHighScore = false;
-	public static int newCoins = 0;
+	// Window
+	private static int window_width = (int) (Game.WIDTH * 0.5);
+	private static int window_height = (int) (Game.HEIGHT * 0.7);
+	private static int window_X = (Game.WIDTH - x_offset - window_width) / 2;
+	private static int window_Y = (Game.HEIGHT - y_offset - window_height) / 2;
 
-	public EndScreen(Handler handler, HUD hud, AudioPlayer audio, LoadGame load) {
+	// Sections
+	private static int section_X = window_X + 15;
+	private static int[] section_Y = new int[2];
+	private static int section_width = (int) (window_width / 2.5 - 30);
+	private static int section_height = (window_height - 30) / 4 - 40;
+
+	// Content Window
+	private static int content_X = (int) (window_X + window_width / 2.5);
+
+	private static Color[] colors = new Color[2];
+
+	public static boolean new_high_score = false;
+	public static int new_coins = 0;
+
+	public EndScreen(Game game, Handler handler, HUD hud, AudioPlayer audio, LoadGame load) {
+		this.game = game;
 		this.handler = handler;
 		this.hud = hud;
 		this.audio = audio;
 		this.load = load;
+
+		for (int i = 0; i < section_Y.length; i++)
+			section_Y[i] = window_Y + 30 + 15 * (i + 1) + section_height * i;
+
+		reset_colors();
+	}
+
+	public static void reset_colors() {
+		Arrays.fill(colors, Settings.darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+	}
+
+	public Map<String, Map<String, Integer>> setupTextDimensions() {
+		return new HashMap<>() {
+			{
+				put("Game Over", Utils.get_text_dimensions("Game Over", Game.menuFont5));
+				put("Play Again", Utils.get_text_dimensions("Play Again", Game.menuFont3));
+				put("Main Menu", Utils.get_text_dimensions("Main Menu", Game.menuFont3));
+				put("Player", Utils.get_text_dimensions("Player 1", Game.menuFont4));
+			}
+		};
+	}
+
+	private void reset_stats(boolean multiplayer) {
+		audio.playMenuSound("app/res/button4.wav", 0.27);
+		reset_colors();
+		handler.object.clear();
+		hud.set_level(1, 1);
+		hud.set_level(2, 1);
+		hud.set_score(1, 0);
+		hud.set_score(2, 0);
+		new_coins = 0;
+		new_high_score = false;
+
+		if (multiplayer)
+			Game.multiplayer = false;
+
+		if (load.user > 0)
+			load.save(load.save_files.get(load.user), null);
 	}
 
 	public void mousePressed(MouseEvent e) {
+		if (Game.gameState != STATE.End)
+			return;
+
 		int mx = e.getX();
 		int my = e.getY();
+		int mouse = e.getButton();
+		Boolean left_click = mouse == MouseEvent.BUTTON1;
 
-		//Play Again
-		if (Game.gameState == STATE.End) {
-			if (mouseOver(mx, my, 430, 350, 200, 80)) {
-				handler.clearEnemys();
-				hud.isHighScore(hud.highScore);
-				hud.setLevel(1);
-				hud.score(0);
-				newCoins = 0;
-				Game.gameState = STATE.Game;
-				handler.addObject(new Player(Game.WIDTH/2-32, Game.HEIGHT/2-32, ID.Player, handler));
-				handler.clearEnemys();
-				for (int i = 0; i < 1; i++)
-					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-27), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-				newHighScore = false;
-				if (Settings.darkMode) endColor = Color.black;
-				else endColor = Color.darkGray;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);audio.playMenuSound("app/res/button.wav", 0.84);
-			}
-			//Main Menu
-			if (mouseOver(mx, my, 170, 350, 200, 80)) {
-				handler.object.clear();
+		if (!left_click)
+			return;
 
-				hud.setLevel(1);
-				hud.score(0);
-				newCoins = 0;
-				Game.gameState = STATE.Menu;
-				for (int i = 0; i < 20; i++) {
-					handler.addObject(new MenuParticle(r.nextInt(Game.WIDTH)-40, r.nextInt(Game.HEIGHT)-70, ID.MenuParticle, handler));
-				}
-				newHighScore = false;
-				if (load.user > 0) {
-					handler.addObject(new MenuPlayer(640,355,ID.MenuPlayer,handler)); 
-					load.save(load.saveFiles.get(load.user));
-				}
-				if (Settings.darkMode) endColor2 = Color.black;
-				else endColor2 = Color.darkGray;
-				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
+		// Play Again
+		if (Utils.mouse_over(mx, my, section_X, section_Y[0], section_width, section_height)) {
+			reset_stats(false);
+
+			Game.gameState = STATE.Game;
+
+			int p1_X = Game.multiplayer ? Game.WIDTH / 2 - 64 : Game.WIDTH / 2 - 32;
+			int p1_Y = Game.HEIGHT / 2 - 32;
+
+			handler.add_object(new Player(p1_X, p1_Y, ID.Player, handler));
+
+			if (Game.multiplayer)
+				handler.add_object(new Player(Game.WIDTH / 2 + 64, Game.HEIGHT / 2 - 32, ID.Player2, handler));
+
+			for (int i = 0; i < (Game.multiplayer ? 4 : 2); i++) {
+				BasicEnemy basic = new BasicEnemy(Utils.rand_int(50, Game.WIDTH - 50),
+						Utils.rand_int(50, Game.HEIGHT - 50), ID.BasicEnemy, handler, hud);
+
+				HardEnemy hard = new HardEnemy(Utils.rand_int(50, Game.WIDTH - 50),
+						Utils.rand_int(50, Game.HEIGHT - 50), ID.HardEnemy, handler, hud);
+
+				handler.add_object(Settings.difficulty == 0 ? basic : hard);
 			}
 		}
-		else if (Game.gameState == STATE.End2) {
-			//Play Again
-			if (mouseOver(mx, my, 430, 350, 200, 80)) {
-				handler.clearEnemys();
-				hud.setLevel(1);
-				hud.setLevel2(1);
-				hud.score(0);
-				hud.score2(0);
-				newCoins = 0;
-				Game.gameState = STATE.Game;
-				handler.addObject(new Player(Game.WIDTH/2-64, Game.HEIGHT/2-32, ID.Player, handler));
-				handler.addObject(new Player(Game.WIDTH/2+64, Game.HEIGHT/2-32, ID.Player2, handler));
-				handler.clearEnemys();
-				for (int i = 0; i < 2; i++)
-					handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH-30), r.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler, hud));
-				newHighScore = false;
-				if (Settings.darkMode) endColor = Color.black;
-				else endColor = Color.darkGray;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-				if (Settings.sound) audio.playMenuSound("app/res/button.wav", 0.84);
-			}
-			//Main Menu
-			else if (mouseOver(mx, my, 170, 350, 200, 80)) {
-				handler.object.clear();
-				Game.multiplayer = false;
-				hud.setLevel(1);
-				hud.setLevel2(1);
-				hud.score(0);
-				hud.score2(0);
-				newCoins = 0;
-				Game.gameState = STATE.Menu;
-				for (int i = 0; i < 20; i++) {
-					handler.addObject(new MenuParticle(r.nextInt(Game.WIDTH)-40, r.nextInt(Game.HEIGHT)-70, ID.MenuParticle, handler));
-				}
-				newHighScore = false;
-				if (load.user > 0) {
-					handler.addObject(new MenuPlayer(640,355,ID.MenuPlayer,handler));
-					load.save(load.saveFiles.get(load.user));
-				}
-				if (Settings.darkMode) endColor2 = Color.black;
-				else endColor2 = Color.darkGray;
-				if (Settings.sound) audio.playMenuSound("app/res/button4.wav", 0.27);
-			}
+
+		// Main Menu
+		else if (Utils.mouse_over(mx, my, section_X, section_Y[1], section_width, section_height)) {
+			reset_stats(Game.multiplayer);
+
+			Game.gameState = STATE.Menu;
+			Utils.render_menu_particles(handler);
+
+			if (load.user > 0)
+				handler.add_object(new MenuPlayer((int) ((Game.WIDTH - 17) * 0.794), (int) (Game.HEIGHT * 0.36) + 82,
+						ID.MenuPlayer, handler, load));
 		}
 	}
 
 	public void mouseReleased(MouseEvent e) {
-
 	}
 
 	public void mouseMoved(MouseEvent e) {
+		if (Game.gameState != STATE.End)
+			return;
+
 		int mx = e.getX();
 		int my = e.getY();
 
-		if (Game.gameState == STATE.End || Game.gameState == STATE.End2) {
+		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-			//Play Again
-			if (mouseOver(mx, my, 430, 350, 200, 80)) {
-				if (Settings.darkMode) endColor = Color.green;
-				else endColor = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) endColor = Color.black;
-				else endColor = Color.darkGray;
-			}
-
-			//Main Menu
-			if (mouseOver(mx, my, 170, 350, 200, 80)) {
-				if (Settings.darkMode) endColor2 = Color.green;
-				else endColor2 = new Color(0,170,0);
-			} else {
-				if (Settings.darkMode) endColor2 = Color.black;
-				else endColor2 = Color.darkGray;
-			}
-
+		// Play Again
+		if (Utils.mouse_over(mx, my, section_X, section_Y[0], section_width, section_height)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[0] = Settings.darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
 		}
-	}
 
-	private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
-		if (mx > x && mx < x + width) {
-			if (my > y && my < y + height) {
-				return true;
-			}
-			else return false;
+		// Main Menu
+		else if (Utils.mouse_over(mx, my, section_X, section_Y[1], section_width, section_height)) {
+			this.game.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			colors[1] = Settings.darkMode ? new Color(80, 80, 80) : new Color(140, 140, 140);
 		}
-		else return false;
+
+		else
+			reset_colors();
 	}
 
 	public void tick() {
-
 	}
 
-	public void render(Graphics g) {
-		if (Game.gameState == STATE.End2) {
+	public void render(Graphics2D g) {
+		Map<String, Map<String, Integer>> dims = setupTextDimensions();
 
-			if (Settings.darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(235,235,235));
-			g.fillRect(100, 50, 600, 450);
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(100, 50, 600, 450);
+		// Darken Background
+		g.setColor(new Color(0, 0, 0, (int) (255 * 0.8)));
+		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
+		// Window
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+		g.setColor(Settings.darkMode ? Color.darkGray : new Color(200, 200, 200));
+		g.fillRoundRect(window_X, window_Y, window_width, window_height, 20, 20);
+		g.setColor(Settings.darkMode ? new Color(30, 30, 30) : new Color(230, 230, 230));
+		g.drawRoundRect(window_X, window_Y, window_width, window_height, 20, 20);
 
-			g.setFont(Game.titleFont);
-			g.setColor(Color.red);
-			g.drawString("Game Over", 230, 100);
+		Path2D path = new Path2D.Double();
+		int radius = 10;
+		path.moveTo(window_X + radius, window_Y);
+		path.lineTo(window_X + window_width - radius, window_Y);
+		path.quadTo(window_X + window_width, window_Y, window_X + window_width, window_Y + radius);
+		path.lineTo(window_X + window_width, window_Y + 30);
+		path.lineTo(window_X, window_Y + 30);
+		path.lineTo(window_X, window_Y + radius);
+		path.quadTo(window_X, window_Y, window_X + radius, window_Y);
+		path.closePath();
+		g.fill(path);
 
-			g.setFont(Game.menuFont);
-			g.setColor(new Color(0, 140, 210));
-			g.drawString("Player 1", 210, 210);
-			g.setFont(Game.menuFont2);
-			g.drawString("Score  -  " + hud.getScore(), 210, 260);
-			g.drawString("Level  -  " + hud.getLevel(), 210, 290);
+		// Text
+		g.setFont(Game.menuFont5);
+		g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+		Map<String, Integer> game_over_dims = dims.get("Game Over");
+		g.drawString("Game Over", window_X + (window_width - game_over_dims.get("width")) / 2,
+				window_Y + (30 - game_over_dims.get("height")) / 2 + game_over_dims.get("ascent"));
 
-			g.setFont(Game.menuFont);
-			g.setColor(new Color(0,170,0));
-			g.drawString("Player 2", 470, 210);
-			g.setFont(Game.menuFont2);
-			g.drawString("Score  -  " + hud.getScore2(), 470, 260);
-			g.drawString("Level  -  " + hud.getLevel2(), 470, 290); 
+		// Divider
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+		g.setColor(Settings.darkMode ? new Color(35, 35, 35) : new Color(230, 230, 230));
+		g.fillRect(content_X, window_Y + 45, 3, window_height - 65);
 
-			g.setFont(Game.menuFont);
-			if (!newHighScore) {
-				if (Settings.darkMode) g.setColor(Color.white);
-				else g.setColor(Color.black);
-				g.drawString("HighScore  -  " + hud.highScore, 278, 150);
-			} else {
-				g.setColor(Color.magenta);
-				g.drawString("New  HighScore  -  " + hud.highScore, 245, 150);
-			}
-			
-			g.drawImage(Game.coin[6],360,162,null);
-			if (Settings.darkMode) g.setColor(Color.white);
-			else g.setColor(Color.black);
-			g.setFont(Game.menuFont4);
-			g.drawString(""+newCoins, 380, 177);
-			
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(430, 350, 200, 80);
-			g.setColor(endColor);
-			g.drawRect(430, 350, 200, 80);
-			g.setFont(Game.menuFont);
-			g.drawString("Play Again", 455, 395);
+		// Sections
+		g.setFont(Game.menuFont3);
+		String[] sections = new String[] { "Play Again", "Main Menu" };
+		for (int i = 0; i < section_Y.length; i++) {
+			g.setColor(colors[i]);
+			g.fillRoundRect(section_X, section_Y[i], section_width, section_height, 20, 20);
+			g.setColor(Settings.darkMode ? new Color(25, 25, 25) : new Color(225, 225, 225));
+			g.drawRoundRect(section_X, section_Y[i], section_width, section_height, 20, 20);
 
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(170, 350, 200, 80);
-			g.setColor(endColor2);
-			g.drawRect(170, 350, 200, 80);
-			g.setFont(Game.menuFont);
-			g.drawString("Main Menu", 200, 395);
+			g.setColor(Settings.darkMode ? Color.lightGray : Color.darkGray);
+			Map<String, Integer> section_dims = dims.get(sections[i]);
+			g.drawString(sections[i], section_X + (section_width - section_dims.get("width")) / 2,
+					section_Y[i] + (section_height - section_dims.get("height")) / 2 + section_dims.get("ascent"));
 		}
-		else if (Game.gameState == STATE.End) {
 
-			if (Settings.darkMode) g.setColor(Color.darkGray);
-			else g.setColor(new Color(235,235,235));
-			g.fillRect(100, 50, 600, 450);
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.darkGray);
-			g.drawRect(100, 50, 600, 450);
+		g.setFont(Game.menuFont4);
+		Map<String, Integer> p_dims = dims.get("Player");
+		int start_X = content_X + 30;
+		int start_Y = window_Y + 79 + p_dims.get("height");
+		String high_score = new_high_score ? "New High Score: " + HUD.high_score : "High Score: " + HUD.high_score;
+		g.drawString(high_score, start_X, start_Y);
 
-			g.setFont(Game.titleFont);
-			g.setColor(Color.red);
-			g.drawString("Game Over", 230, 100);
+		int coins_X = start_X + Game.coin.getWidth() + 10;
+		int coins_Y = start_Y + 15 + Game.coin.getHeight() - (Game.coin.getHeight() - p_dims.get("height")) / 2;
+		g.drawImage(Game.coin, start_X, start_Y + 15, null);
+		g.drawString(String.valueOf(EndScreen.new_coins), coins_X, coins_Y);
+		
+		if (Game.multiplayer) {
+			int p1_Y = start_Y + 15 + Game.coin.getHeight() + p_dims.get("height") + 30;
+			g.drawString(load.user == 0 ? "Player 1" : load.saves.get(load.user - 1), start_X, p1_Y);
+			g.setFont(Game.menuFont6);
+			g.drawString("Score: " + hud.get_score(1), start_X, p1_Y + p_dims.get("height") + 15);
+			g.drawString("Level: " + hud.get_level(1), start_X, p1_Y + (p_dims.get("height") + 15) * 2);
 
-			g.setFont(Game.menuFont);
-			g.setColor(new Color(0, 140, 210));
-			g.drawString("Score  -  " + hud.getScore(), 185, 210);
-			g.drawString("Level  -  " + hud.getLevel(), 445, 210);
-			
-			if (!newHighScore) {
-				if (Settings.darkMode) g.setColor(Color.white);
-				else g.setColor(Color.black);
-				g.drawString("HighScore  -  " + hud.highScore, 278, 150);
-			} else {
-				g.setColor(Color.magenta);
-				g.drawString("New  HighScore  -  " + hud.highScore, 245, 150);
-			}
-			
-			g.drawImage(Game.coin[6],360,162,null);
-			if (Settings.darkMode) g.setColor(Color.white);
-			else g.setColor(Color.black);
 			g.setFont(Game.menuFont4);
-			g.drawString(""+newCoins, 380, 177);
-
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(430, 350, 200, 80);
-			g.setColor(endColor);
-			g.drawRect(430, 350, 200, 80);
-			g.setFont(Game.menuFont);
-			g.drawString("Play Again", 455, 395);
-
-			if (Settings.darkMode) g.setColor(Color.lightGray);
-			else g.setColor(Color.white);
-			g.fillRect(170, 350, 200, 80);
-			g.setColor(endColor2);
-			g.drawRect(170, 350, 200, 80);
-			g.setFont(Game.menuFont);
-			g.drawString("Main Menu", 200, 395);
+			int p2_Y = p1_Y + (p_dims.get("height") + 15) * 3 + 15;
+			g.drawString("Player 2", start_X, p2_Y);
+			g.setFont(Game.menuFont6);
+			g.drawString("Score: " + hud.get_score(2), start_X, p2_Y + p_dims.get("height") + 15);
+			g.drawString("Level: " + hud.get_level(2), start_X, p2_Y + (p_dims.get("height") + 15) * 2);
+		} else {
+			int p1_Y = start_Y + 15 + Game.coin.getHeight() + p_dims.get("height") + 30;
+			g.setFont(Game.menuFont4);
+			g.drawString("Score: " + hud.get_score(1), start_X, p1_Y);
+			g.drawString("Level: " + hud.get_level(1), start_X, p1_Y + p_dims.get("height") + 15);
 		}
 	}
 }
-
-

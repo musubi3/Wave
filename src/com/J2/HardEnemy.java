@@ -17,8 +17,8 @@ public class HardEnemy extends GameObject {
 
 		this.hud = hud;
 		this.handler = handler;
-		velX = 5.5f;
-		velY = 5.5f;
+		velX = 6f * (Math.random() < 0.5 ? -1 : 1);
+		velY = 6f * (Math.random() < 0.5 ? -1 : 1);
 	}
 
 	public void tick() {
@@ -28,12 +28,19 @@ public class HardEnemy extends GameObject {
 //		if (y <= 0 || y >= Game.HEIGHT-60) { if(velY<0) velY=(r.nextInt(5)+3); else velY=-(r.nextInt(5)+3); }
 //		if (x <= 0 || x >= Game.WIDTH-37) { if(velX<0) velX=(r.nextInt(5)+3); else velX=-(r.nextInt(5)+3); }
 		
-		if (y <= 0 || y >= Game.HEIGHT-50) velY *= -1.005;
-		if (x <= 0 || x >= Game.WIDTH-27) velX *= -1.01;
+		if (y <= 0 || y >= Game.HEIGHT - 50) {
+			velY *= -1;
+			velX += Utils.rand_float(-2f, 2f);
+		} 
+		
+		if (x <= 0 || x >= Game.WIDTH - 27) {
+			velX *= -1;
+			velY += Utils.rand_float(-2f, 2f);
+		}
 
-		if (hud.getLevel() == 10 || hud.getLevel2() == 10) handler.removeObject(this);
+		if (hud.get_level(1) == 10 || hud.get_level(2) == 10) handler.remove_object(this);
 
-		handler.addObject(new Trail(x, y, ID.Trail, new Color(50,r.nextInt(155)+100,50), 16, 16, 0.02f,handler));
+		handler.add_object(new Trail(x, y, ID.Trail, new Color(50,r.nextInt(155)+100,50), 16, 16, 0.02f,handler));
 	}
 
 	public void render(Graphics g) {

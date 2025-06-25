@@ -3,21 +3,17 @@ package com.J2;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import com.J2.Game.STATE;
-
 public class KeyInput extends KeyAdapter {
 
 	private Handler handler;
-	private LoadGame load;
 	private AudioPlayer audio;
 	private boolean[] keyDown = new boolean[4];
 	private boolean[] keyDown2 = new boolean[4];
-	
-	public KeyInput(Handler handler, LoadGame load, AudioPlayer audio) {
+
+	public KeyInput(Handler handler, AudioPlayer audio) {
 		this.handler = handler;
-		this.load = load;
 		this.audio = audio;
-		
+
 		for (int i = 0; i < keyDown.length; i++) {
 			keyDown[i] = false;
 		}
@@ -28,45 +24,54 @@ public class KeyInput extends KeyAdapter {
 
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		
-		if (Game.gameState == STATE.Settings || Game.gameState == STATE.AudioSettings || Game.gameState == STATE.ApperanceSettings 
-			|| Game.gameState == STATE.Difficulty || Game.gameState == STATE.Shop) {
-			if (key == KeyEvent.VK_ESCAPE) {
-				Game.gameState = STATE.Menu;
-				if (load.user > 0) load.save(load.saveFiles.get(load.user));
-			}
-		}
-		else if (Game.gameState == STATE.Game) {
-			if (key == KeyEvent.VK_P) {
-				if (Game.paused) Game.paused = false;
-				else {audio.playMenuSound("app/res/button4.wav", 0.27); Game.paused = true;}
-			}
-		}
-		if (Game.paused) {
-			if (key == KeyEvent.VK_ESCAPE) Game.paused = false;
-		}
-		
-		for(int i = 0; i < handler.object.size(); i++) {
-			GameObject tempObject = handler.object.get(i);
-			if (tempObject.getID() == ID.Player) {
-				if(key == KeyEvent.VK_W) { tempObject.setVelY(-Player.speed); keyDown[0]=true; }
-				if(key == KeyEvent.VK_S) { tempObject.setVelY(Player.speed); keyDown[1]=true; }
-				if(key == KeyEvent.VK_D) { tempObject.setVelX(Player.speed); keyDown[2]=true; }
-				if(key == KeyEvent.VK_A) { tempObject.setVelX(-Player.speed); keyDown[3]=true; }
-//				if(key == KeyEvent.VK_SPACE) {
-//					tempObject.setVelX(tempObject.getVelX() * 2.0f);
-//					tempObject.setVelY(tempObject.getVelY() * 2.0f);
-//				}
-			}
-			if (tempObject.getID() == ID.Player2) {
-				if(key == KeyEvent.VK_UP) { tempObject.setVelY(-Player.speed); keyDown2[0]=true; }
-				if(key == KeyEvent.VK_DOWN) { tempObject.setVelY(Player.speed); keyDown2[1]=true; }
-				if(key == KeyEvent.VK_RIGHT) { tempObject.setVelX(Player.speed); keyDown2[2]=true; }
-				if(key == KeyEvent.VK_LEFT) { tempObject.setVelX(-Player.speed); keyDown2[3]=true; }
-//				if(key == KeyEvent.VK_CONTROL) {
-//					tempObject.setVelX(tempObject.getVelX() * 2.0f);
-//					tempObject.setVelY(tempObject.getVelY() * 2.0f);
-//				}
+
+		if (Game.gameState == STATE.Game) {
+			for (int i = 0; i < handler.object.size(); i++) {
+				GameObject tempObject = handler.object.get(i);
+				if (tempObject.getID() == ID.Player) {
+					if (key == KeyEvent.VK_W) {
+						tempObject.setVelY(-Player.speed);
+						keyDown[0] = true;
+					}
+					if (key == KeyEvent.VK_S) {
+						tempObject.setVelY(Player.speed);
+						keyDown[1] = true;
+					}
+					if (key == KeyEvent.VK_D) {
+						tempObject.setVelX(Player.speed);
+						keyDown[2] = true;
+					}
+					if (key == KeyEvent.VK_A) {
+						tempObject.setVelX(-Player.speed);
+						keyDown[3] = true;
+					}
+					// if(key == KeyEvent.VK_SPACE) {
+					// tempObject.setVelX(tempObject.getVelX() * 2.0f);
+					// tempObject.setVelY(tempObject.getVelY() * 2.0f);
+					// }
+				}
+				if (tempObject.getID() == ID.Player2) {
+					if (key == KeyEvent.VK_UP) {
+						tempObject.setVelY(-Player.speed);
+						keyDown2[0] = true;
+					}
+					if (key == KeyEvent.VK_DOWN) {
+						tempObject.setVelY(Player.speed);
+						keyDown2[1] = true;
+					}
+					if (key == KeyEvent.VK_RIGHT) {
+						tempObject.setVelX(Player.speed);
+						keyDown2[2] = true;
+					}
+					if (key == KeyEvent.VK_LEFT) {
+						tempObject.setVelX(-Player.speed);
+						keyDown2[3] = true;
+					}
+					// if(key == KeyEvent.VK_CONTROL) {
+					// tempObject.setVelX(tempObject.getVelX() * 2.0f);
+					// tempObject.setVelY(tempObject.getVelY() * 2.0f);
+					// }
+				}
 			}
 		}
 	}
@@ -74,33 +79,45 @@ public class KeyInput extends KeyAdapter {
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
 
-		for(int i = 0; i < handler.object.size(); i++) {
+		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
 			if (tempObject.getID() == ID.Player) {
-				if(key == KeyEvent.VK_W) keyDown[0]=false;
-				if(key == KeyEvent.VK_S) keyDown[1]=false;
-				if(key == KeyEvent.VK_D) keyDown[2]=false;
-				if(key == KeyEvent.VK_A) keyDown[3]=false;
-//				if(key == KeyEvent.VK_SPACE) {
-//					tempObject.setVelX(tempObject.getVelX() / 2.0f);
-//					tempObject.setVelY(tempObject.getVelY() / 2.0f);
-//				}
-				
-				if (!keyDown[0] && !keyDown[1]) tempObject.setVelY(0);
-				if (!keyDown[2] && !keyDown[3]) tempObject.setVelX(0);
+				if (key == KeyEvent.VK_W)
+					keyDown[0] = false;
+				if (key == KeyEvent.VK_S)
+					keyDown[1] = false;
+				if (key == KeyEvent.VK_D)
+					keyDown[2] = false;
+				if (key == KeyEvent.VK_A)
+					keyDown[3] = false;
+				// if(key == KeyEvent.VK_SPACE) {
+				// tempObject.setVelX(tempObject.getVelX() / 2.0f);
+				// tempObject.setVelY(tempObject.getVelY() / 2.0f);
+				// }
+
+				if (!keyDown[0] && !keyDown[1])
+					tempObject.setVelY(0);
+				if (!keyDown[2] && !keyDown[3])
+					tempObject.setVelX(0);
 			}
 			if (tempObject.getID() == ID.Player2) {
-				if(key == KeyEvent.VK_UP) keyDown2[0]=false;
-				if(key == KeyEvent.VK_DOWN) keyDown2[1]=false;
-				if(key == KeyEvent.VK_RIGHT) keyDown2[2]=false;
-				if(key == KeyEvent.VK_LEFT) keyDown2[3]=false;
-//				if(key == KeyEvent.VK_CONTROL) {
-//					tempObject.setVelX(tempObject.getVelX() / 2.0f);
-//					tempObject.setVelY(tempObject.getVelY() / 2.0f);
-//				}
-				
-				if (!keyDown2[0] && !keyDown2[1]) tempObject.setVelY(0);
-				if (!keyDown2[2] && !keyDown2[3]) tempObject.setVelX(0);
+				if (key == KeyEvent.VK_UP)
+					keyDown2[0] = false;
+				if (key == KeyEvent.VK_DOWN)
+					keyDown2[1] = false;
+				if (key == KeyEvent.VK_RIGHT)
+					keyDown2[2] = false;
+				if (key == KeyEvent.VK_LEFT)
+					keyDown2[3] = false;
+				// if(key == KeyEvent.VK_CONTROL) {
+				// tempObject.setVelX(tempObject.getVelX() / 2.0f);
+				// tempObject.setVelY(tempObject.getVelY() / 2.0f);
+				// }
+
+				if (!keyDown2[0] && !keyDown2[1])
+					tempObject.setVelY(0);
+				if (!keyDown2[2] && !keyDown2[3])
+					tempObject.setVelX(0);
 			}
 		}
 	}
