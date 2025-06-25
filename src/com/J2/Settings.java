@@ -188,12 +188,13 @@ public class Settings extends MouseAdapter implements KeyListener {
 		this.game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		darkMode = theme;
 
-		reset_colors();
+		Settings.reset_colors();
 		Menu.reset_colors();
 		LoadGame.reset_colors();
 		About.reset_colors();
 		Shop.reset_colors();
 		Paused.reset_colors();
+		EndScreen.reset_colors();
 
 		if (load.user > 0)
 			load.save(load.save_files.get(load.user), null);

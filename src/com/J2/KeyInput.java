@@ -6,13 +6,11 @@ import java.awt.event.KeyEvent;
 public class KeyInput extends KeyAdapter {
 
 	private Handler handler;
-	private AudioPlayer audio;
 	private boolean[] keyDown = new boolean[4];
 	private boolean[] keyDown2 = new boolean[4];
 
-	public KeyInput(Handler handler, AudioPlayer audio) {
+	public KeyInput(Handler handler) {
 		this.handler = handler;
-		this.audio = audio;
 
 		for (int i = 0; i < keyDown.length; i++) {
 			keyDown[i] = false;

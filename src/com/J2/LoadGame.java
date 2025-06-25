@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -40,7 +41,11 @@ public class LoadGame extends MouseAdapter implements KeyListener {
 	private String input_name = "";
 	private Integer input_user = null;
 	private boolean[] right_click_menu = { false, false, false };
-	private String[] save_paths = { "app/saves/save1.txt", "app/saves/save2.txt", "app/saves/save3.txt" };
+	private String[] save_paths = {
+			System.getenv("APPDATA") + "\\Wave\\saves\\save1.txt",
+			System.getenv("APPDATA") + "\\Wave\\saves\\save2.txt",
+			System.getenv("APPDATA") + "\\Wave\\saves\\save3.txt"
+	};
 	private static Color[] save_colors = new Color[3];
 	private static Color[] name_colors = new Color[3];
 	private static Color[] del_colors = new Color[3];
@@ -120,9 +125,40 @@ public class LoadGame extends MouseAdapter implements KeyListener {
 			high_scores.add(0);
 			coins.add(0);
 		}
+
 		save_files.add("app/saves/base.txt");
 		for (int i = 0; i < 3; i++)
 			save_files.add(save_paths[i]);
+
+		Path save_dir = Paths.get(System.getenv("APPDATA"), "Wave", "saves");
+		if (!Files.isDirectory(save_dir)) {
+			try {
+				Files.createDirectories(save_dir);
+				Path save_file = save_dir.resolve("last_user.txt");
+				try (BufferedWriter bw = Files.newBufferedWriter(save_file)) {
+					bw.write("last_user=0");
+				}
+
+				try (BufferedReader br = new BufferedReader(new FileReader(save_files.get(0)))) {
+					StringBuilder base_save = new StringBuilder();
+					String line;
+					while ((line = br.readLine()) != null)
+						base_save.append(line).append("\n");
+
+					for (int i = 0; i < 3; i++) {
+						save_file = save_dir.resolve("save" + (i + 1) + ".txt");
+						try (BufferedWriter bw = Files.newBufferedWriter(save_file)) {
+							bw.write(base_save.toString());
+						}
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		this.load_user();
 		this.load(this.save_files.get(this.user), true);
@@ -160,7 +196,7 @@ public class LoadGame extends MouseAdapter implements KeyListener {
 	}
 
 	public void save_user() {
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter("app/saves/last_user.txt"))) {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(System.getenv("APPDATA") + "\\Wave\\saves\\last_user.txt"))) {
 			bw.write("last_user=" + user);
 			bw.close();
 		} catch (IOException e) {
@@ -169,7 +205,7 @@ public class LoadGame extends MouseAdapter implements KeyListener {
 	}
 
 	public void load_user() {
-		try (BufferedReader br = new BufferedReader(new FileReader("app/saves/last_user.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(System.getenv("APPDATA") + "\\Wave\\saves\\last_user.txt"))) {
 			String[] last_user = br.readLine().split("=");
 			if (last_user.length > 1)
 				user = Integer.parseInt(last_user[1]);
@@ -417,6 +453,14 @@ public class LoadGame extends MouseAdapter implements KeyListener {
 			coins.add(0);
 		right_click_menu[user_num - 1] = false;
 		Arrays.fill(del_colors, Settings.darkMode ? Color.darkGray : Color.lightGray);
+
+		Settings.reset_colors();
+		Menu.reset_colors();
+		LoadGame.reset_colors();
+		About.reset_colors();
+		Shop.reset_colors();
+		Paused.reset_colors();
+		EndScreen.reset_colors();
 	}
 
 	public void mousePressed(MouseEvent e) {
