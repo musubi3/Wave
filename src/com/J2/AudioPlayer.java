@@ -1,7 +1,7 @@
 package com.J2;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -19,7 +19,8 @@ public class AudioPlayer {
 			return;
 
 		try {
-			AudioInputStream menuSound = AudioSystem.getAudioInputStream(new File(filePath));
+			InputStream file = getClass().getResourceAsStream(filePath);
+			AudioInputStream menuSound = AudioSystem.getAudioInputStream(file);
 			play = AudioSystem.getClip();
 			play.open(menuSound);
 			FloatControl volume = (FloatControl) play.getControl(FloatControl.Type.MASTER_GAIN);
@@ -38,7 +39,8 @@ public class AudioPlayer {
 			return;
 
 		try {
-			AudioInputStream gameSound = AudioSystem.getAudioInputStream(new File(filePath));
+			InputStream file = getClass().getResourceAsStream(filePath);
+			AudioInputStream gameSound = AudioSystem.getAudioInputStream(file);
 			play2 = AudioSystem.getClip();
 			play2.open(gameSound);
 			FloatControl volume = (FloatControl) play2.getControl(FloatControl.Type.MASTER_GAIN);

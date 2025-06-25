@@ -1,16 +1,21 @@
 package com.J2;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
 public class ImageLoader {
 	private BufferedImage image;
-	
+
 	public BufferedImage loadImage(String path) {
-		try {image = ImageIO.read(new File(path));}
-		catch(Exception e) {e.printStackTrace();}
+		try {
+			InputStream file = getClass().getResourceAsStream(path);
+			image = ImageIO.read(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return image;
 	}
 }

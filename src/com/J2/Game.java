@@ -3,8 +3,8 @@ package com.J2;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Main Game class for Wave.
@@ -294,7 +294,8 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private Font loadFont(String path, float size, GraphicsEnvironment ge) throws IOException, FontFormatException {
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont(size);
+		InputStream file = getClass().getResourceAsStream(path);
+		Font font = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(size);
 		ge.registerFont(font);
 		return font;
 	}
