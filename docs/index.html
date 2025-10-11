@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justin Lee: Wave</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+</head>
+
+<body>
+    <nav class="main-nav">
+        <a href="https://musubi3.github.io/dsc106-portfolio">Home</a>
+        <a href="https://musubi3.github.io/dsc106-portfolio/resume/index.html">Resume</a>
+        <a href="https://musubi3.github.io/dsc106-portfolio/projects/index.html">Projects</a>
+        <a href="https://musubi3.github.io/dsc106-portfolio/contact/index.html">Contact</a>
+        <a href="https://github.com/musubi3" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/justin-lee-634719352/" target="_blank">LinkedIn</a>
+    </nav>
+
+    <div class="content project-detail">
+        <header class="project-header">
+            <h1>Wave</h1>
+            <div class="project-meta">
+                <p class="project-author">By: Justin Lee</p>
+                <div class="project-info">
+                    <span class="project-date">Spring 2021</span>
+                    <span class="project-category">Personal Project</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="project-badges">
+            <a href="https://github.com/musubi3/Wave/releases" class="project-download">Download for Windows</a>
+        </div>
+
+        <nav class="project-toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#gameplay">Gameplay</a></li>
+                <li><a href="#upgrades">Upgrades</a></li>
+                <li><a href="#skins">Skins</a></li>
+                <li><a href="#saves">Saves</a></li>
+                <li><a href="#multiplayer">Multiplayer</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </nav>
+
+        <section id="about" class="project-section">
+            <h2>About</h2>
+            <p>Wave is a simple 2D game I developed in Java during my junior year of high school. The project began as a
+                tutorial by <a href="https://youtu.be/1gir2R7G9ws?si=3tcz1yNh1YVnM3s3" target="_blank">RealTutsGML</a>
+                on YouTube, which provided the foundation for the core mechanics. From there, I extended the game by
+                implementing custom features, original visual elements, and gameplay enhancements.</p>
+
+            <p>If you'd like to try it out, you can download the latest version of the game for Windows <a
+                    href="https://github.com/musubi3/Wave/releases" target="_blank">here</a>.</p>
+
+            <img src="https://i.postimg.cc/P58YtTZk/Screenshot-2025-06-25-023050.png" alt="Home Screenshot"
+                class="project-image">
+        </section>
+
+        <section id="gameplay" class="project-section">
+            <h2>Gameplay</h2>
+            <p>In Wave, you control the blue circle, navigating through waves of increasingly difficult enemy
+                projectiles. Your objective is simple: survive as long as possible by dodging various types of enemies,
+                each with distinct behaviors:</p>
+
+            <ul class="enemy-list">
+                <li><strong>Basic enemies</strong> move at a slower pace and bounce predictably.</li>
+                <li><strong>Fast enemies</strong> have increased speed.</li>
+                <li><strong>Hard enemies</strong> bounce unpredictably.</li>
+                <li><strong>Smart enemies</strong> track your movements.</li>
+                <li><strong>Boss enemies</strong> fires fast projectiles at you.</li>
+            </ul>
+
+            <p>Taking a hit reduces your health, but you'll occasionally get a chance to recover—health packs spawn
+                periodically, and collecting them restores a portion of your HP. You'll also find coins, which can be
+                used to unlock new skins and upgrades to enhance your gameplay experience.</p>
+
+            <img src="https://i.postimg.cc/SNkLqJfF/gameplay.png" alt="Game Screenshot" class="project-image">
+        </section>
+
+        <section id="upgrades" class="project-section">
+            <h2>Upgrades</h2>
+            <p>As you collect coins throughout the game, you can spend them on upgrades to improve your chances of
+                survival. The current upgrade options include:</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>Health Upgrade</h3>
+                    <p>Increases your maximum health, allowing you to withstand more enemy hits.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Speed Upgrade</h3>
+                    <p>Boosts your movement speed, making it easier to dodge enemies and collect items.</p>
+                </div>
+            </div>
+
+            <p>These upgrades add a strategic layer to the game, allowing players to tailor their playstyle as they
+                progress through tougher waves.</p>
+
+            <img src="https://i.postimg.cc/kXM2586C/Screenshot-2025-06-25-024602.png" alt="Upgrades Screenshot"
+                class="project-image">
+        </section>
+
+        <section id="skins" class="project-section">
+            <h2>Skins</h2>
+            <p>Customize your character's appearance with unlockable skins earned through gameplay. As you collect
+                coins, you can choose from a variety of visual styles, including:</p>
+
+            <ul class="skin-list">
+                <li><strong>Basic Blue:</strong><br>The classic look.</li>
+                <li><strong>Energy Ball:</strong><br>A glowing, high-energy effect.</li>
+                <li><strong>Rasengan:</strong><br>Inspired by the iconic anime move.</li>
+                <li><strong>Pyro Ball:</strong><br>A fiery, fast-moving variant.</li>
+            </ul>
+
+            <p>Skins are purely cosmetic and allow you to personalize your experience while dodging waves of enemies.
+            </p>
+
+            <img src="https://i.postimg.cc/BbFfSmTp/Screenshot-2025-06-25-024614.png" alt="Skins Screenshot"
+                class="project-image">
+        </section>
+
+        <section id="saves" class="project-section">
+            <h2>Saves</h2>
+            <p>Wave includes a save system that allows players to maintain progress across sessions. Each save profile
+                stores:</p>
+
+            <ul class="feature-list">
+                <li>Unlocked skins</li>
+                <li>High scores</li>
+                <li>Purchased upgrades</li>
+                <li>Custom settings</li>
+            </ul>
+
+            <p>You can create and load multiple profiles, making it easy to track different playstyles or share the game
+                with others on the same device.</p>
+
+            <img src="https://i.postimg.cc/NjYpFd8M/Screenshot-2025-06-25-024520.png" alt="Saves Screenshot"
+                class="project-image">
+        </section>
+
+        <section id="multiplayer" class="project-section">
+            <h2>Multiplayer</h2>
+            <p>Wave also features local multiplayer, allowing two players to play simultaneously on the same device.
+                Player 1 controls their character using the WASD keys, while Player 2 uses the arrow keys. Dodge enemies
+                together or compete for high scores in fast-paced cooperative gameplay.</p>
+
+            <img src="https://i.postimg.cc/QtF547D1/multiplayer.png" alt="Multiplayer Screenshot" class="project-image">
+        </section>
+
+        <section id="settings" class="project-section">
+            <h2>Settings</h2>
+            <p>Tailor the game to your preferences with adjustable settings including light or dark mode, difficulty
+                levels (normal or hard), and audio controls for music, sound effects, and background songs.</p>
+
+            <img src="https://i.postimg.cc/9fb0dQqT/settings.png" alt="Settings Screenshot" class="project-image">
+        </section>
+    </div>
+</body>
+
+</html>
