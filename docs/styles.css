@@ -182,13 +182,13 @@ strong {
     font-weight: 500;
     display: inline-block;
     margin: 1em 0;
+    transition: all 0.2s ease;
 }
 
 .project-download:hover {
     background: oklch(from var(--color-accent) 55% c h);
     color: white;
     text-decoration: none;
-    transition: all 0.2s ease;
 }
 
 .project-image {
