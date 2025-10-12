@@ -187,8 +187,11 @@ strong {
 
 .project-download:hover {
     background: oklch(from var(--color-accent) 55% c h);
-    color: white;
-    text-decoration: none;
+}
+
+.project-download:active,
+.project-download:focus {
+    background: var(--color-accent);
 }
 
 .project-image {
