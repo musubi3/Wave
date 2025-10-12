@@ -235,7 +235,7 @@ a:hover {
 .nav-wrapper nav a:hover {
     border-bottom: 0.4em solid var(--color-accent);
     padding-bottom: 0.1em;
-    background-color: color-mix(in oklch, var(--color-accent, oklch(65% 50% 200)), canvas 85%);
+    background-color: color-mix(in oklch, color-mix(in oklch, var(--color-accent, oklch(65% 50% 200)), canvas 85%) 70%, transparent);
 }
 
 
