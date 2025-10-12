@@ -112,6 +112,74 @@
     --download-hover: var(--color-accent);
 }
 
+/* ANIMATION */
+.project-detail > * {
+  opacity: 0;
+  animation: waveIn 0.8s ease forwards;
+}
+
+.project-header { animation-delay: 0.1s; }
+.project-badges { animation-delay: 0.2s; }
+.project-toc { animation-duration: 1s; animation-delay: 0.3s; }
+#about { animation-delay: 0.4s; }
+#gameplay { animation-delay: 0.5s; }
+#upgrades { animation-delay: 0.6s; }
+#skins { animation-delay: 0.7s; }
+#saves { animation-delay: 0.8s; }
+#multiplayer { animation-delay: 0.9s; }
+#settings { animation-delay: 1s; }
+
+/* Enemy spawn animations */
+.enemy-list li {
+  opacity: 0;
+  transform: translateX(-50px);
+  animation: enemySpawn 0.6s ease forwards;
+}
+
+.enemy-list li:nth-child(1) { animation-delay: 0.6s; }
+.enemy-list li:nth-child(2) { animation-delay: 0.7s; }
+.enemy-list li:nth-child(3) { animation-delay: 0.8s; }
+.enemy-list li:nth-child(4) { animation-delay: 0.9s; }
+.enemy-list li:nth-child(5) { animation-delay: 1s; }
+
+/* Keyframes */
+@keyframes waveIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes enemySpawn {
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes upgradeUnlock {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+@keyframes skinTransform {
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+/* Hover effects */
+.project-download:hover {
+  animation: hoverPulse 0.5s ease-in-out;
+}
+
+@keyframes hoverPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
 
 body {
     font: 100%/1.5 system-ui;
