@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function addDarkModeSwitcher() {
   console.log('Initializing dark mode switcher');
-  
+
   // Create the toggle element
   const toggleHTML = `
     <div class="theme-switcher">
@@ -134,7 +134,7 @@ function addDarkModeSwitcher() {
       </label>
       <span class="theme-label">Dark Mode</span>
     </div>`;
-  
+
   document.body.insertAdjacentHTML('afterbegin', toggleHTML);
 
   const toggle = document.querySelector('#theme-toggle');
