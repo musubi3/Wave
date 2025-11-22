@@ -69,9 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (a.host === location.host) {
       const cleanLink = a.pathname.replace(/index\.html$/, '').replace(/\/$/, '');
-      const cleanCurrent = location.pathname.replace(/index\.html$/, '').replace(/\/$/, '');
-
-      if (cleanLink === cleanCurrent) {
+      
+      if (cleanLink === '/projects') {
         a.classList.add('current');
       }
     }
