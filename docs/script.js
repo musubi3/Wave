@@ -169,7 +169,6 @@ function addDarkModeSwitcher() {
   toggle.addEventListener('change', function () {
     const scheme = this.checked ? 'dark' : 'light';
     applyColorScheme(scheme);
-    reloadPlots();
     localStorage.colorScheme = scheme;
     label.textContent = scheme === 'dark' ? 'Dark Mode' : 'Light Mode';
 
@@ -201,21 +200,6 @@ function addDarkModeSwitcher() {
         const url = new URL(link.href);
         url.searchParams.set('theme', theme);
         link.href = url.toString();
-      }
-    });
-  }
-
-  function reloadPlots() {
-    const plotContainers = document.querySelectorAll('.plot-container');
-
-    plotContainers.forEach(container => {
-      const iframe = container.querySelector('iframe');
-      const loader = container.querySelector('.loader');
-
-      if (iframe && loader) {
-        loader.style.display = 'flex';
-        iframe.classList.remove('loaded');
-        iframe.src = iframe.src;
       }
     });
   }
