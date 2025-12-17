@@ -113,11 +113,6 @@
     background: var(--download-hover);
 }
 
-.project-download:active,
-.project-download:focus {
-    background: var(--download);
-}
-
 .project-image {
     max-width: 100%;
     height: auto;
