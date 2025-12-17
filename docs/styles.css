@@ -193,7 +193,7 @@
 .skin-list li {
     background: var(--tag);
     padding: 1em;
-    border-radius: 6px;
+    border-radius: 12px;
     text-align: center;
     border: 1px solid var(--tag-border);
     transition: all 0.2s ease;
