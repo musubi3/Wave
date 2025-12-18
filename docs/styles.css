@@ -85,11 +85,6 @@
   }
 }
 
-/* Hover effects */
-.project-download:hover {
-  animation: hoverPulse 0.5s ease-in-out;
-}
-
 @keyframes hoverPulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -104,7 +99,8 @@
     border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     margin-right: 0.5em;
     transition: all 0.2s ease;
 }
@@ -112,6 +108,7 @@
 .project-download:hover {
     color: white;
     background: var(--download-hover);
+    animation: hoverPulse 0.5s ease-in-out;
 }
 
 .project-image {
@@ -213,4 +210,11 @@
     padding: 0.5em;
     cursor: pointer;
     color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+    .project-download {
+        padding: 0.8rem 1.6rem;
+        margin-bottom: 1em;
+    }
 }
