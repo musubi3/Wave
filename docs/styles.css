@@ -90,6 +90,13 @@
   50% { transform: scale(1.05); }
 }
 
+.project-badges {
+display: flex;
+    gap: 0.8em;        
+    flex-wrap: wrap;
+    margin-bottom: 1.5em;
+}
+
 /* Game-specific styles */
 .project-download {
     background: var(--download);
@@ -101,7 +108,6 @@
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    margin-right: 0.5em;
     transition: all 0.2s ease;
 }
 
@@ -204,6 +210,5 @@
 @media (max-width: 768px) {
     .project-download {
         padding: 0.8rem 1.6rem;
-        margin-bottom: 1em;
     }
 }
